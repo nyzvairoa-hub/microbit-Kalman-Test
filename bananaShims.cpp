@@ -15,18 +15,18 @@ namespace banana{
     }
 
     int banana_mult(int bananas){
-        if MICROBIT_CODAL
+        #if MICROBIT_CODAL
             return bananas * v2_mult;
-        else
+        #else
             return bananas * v1_mult;
-        endif
+        #endif
     }
 
     int bananas_v2_only(int bananas){
-        if MICROBIT_CODAL
+        #if MICROBIT_CODAL
             return bananas;
-        else
+        #else
             target_panic(PANIC_VARIANT_NOT_SUPPORTED);
-        endif
+        #endif
     }
 }
