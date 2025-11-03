@@ -33,14 +33,4 @@ namespace banana{
             target_panic(PANIC_VARIANT_NOT_SUPPORTED);
         #endif
     }
-
-    //%
-    float bananaHeavyCalc(){
-        int result = 0;
-        for (i = 0; i < 10000; i++){
-            result = result * result;
-            result = result + i;
-        }
-        return result
-    }
 }
