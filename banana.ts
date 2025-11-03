@@ -59,7 +59,7 @@ namespace banana {
      */
     //% blockId=banana_banana_multiplier
     //% block="multiply your bananas $n"
-    //% shim=banana::banana_multiplier
+    //% shim=banana::banana_mult
     export function bananaMultiplier(n: number): number {
         // The simulator cannot differentiate micro:bit versions
         return 0;
