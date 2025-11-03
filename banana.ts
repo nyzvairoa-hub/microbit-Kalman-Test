@@ -1,5 +1,5 @@
 // Icon unicode characters can be found at: http://fontawesome.io/icons/
-//% color=#c2b711 weight=100 icon="\uf1ec" block="Banana Blocks" advanced=false
+//% color=#c2b711 weight=100 icon="\uf1ec" block="Banana Meeeeee" advanced=false
 namespace banana {
 
     /**
