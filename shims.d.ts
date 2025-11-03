@@ -21,7 +21,7 @@ declare namespace banana {
      * This simple C++ function to simply add your bananas!
      */
     //% shim=banana::banana_minus
-    function banana_add(left: int32, right: int32): int32;
+    function banana_minus(left: int32, right: int32): int32;
   
     /**
      * This function uses the C preprocessor to compile different code
