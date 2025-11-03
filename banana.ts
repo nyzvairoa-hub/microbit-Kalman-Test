@@ -44,7 +44,7 @@ namespace banana {
     //% shim=banana::banana_minus
     export function bananaMinus(n: number, m: number): number {
         // This code runs in the simulator
-        return n + m;
+        return n - m;
     }
 
     /**
