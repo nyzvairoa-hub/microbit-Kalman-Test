@@ -81,23 +81,4 @@ namespace banana {
         // so the TypeScript code will always run
         return n;
     }
-    
-    //% blockId=banana_banana_heavy_calc
-    //% block="Heavy Calculation"
-    //% help=github:carlosperate/pxt-banana/docs/bananaHeavyCalc
-    //% shim=banana::bananaHeavyCalc
-    export function bananaHeavyCalc(n: number): number{
-        return n;
-    }
-    //% blockId=banana_heavy_ts
-    //% block="TypeScript Heavy Calculation start at %num"
-    export function heavyCalcTS(num: number): number {
-        let result = num;
-        // Run 10,000 squaring operations. This is slow in TypeScript.
-        for (let i = 0; i < 10000; i++) {
-            // result = result * result; (Prevent overflow by using addition)
-            result = result + i; 
-        }
-        return result;
-    }
 }
