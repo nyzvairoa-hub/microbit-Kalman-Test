@@ -9,7 +9,7 @@
     "files": [
         "main.blocks",
         "main.ts",
-        "kalmanCode.cpp",
+        "MathShims.cpp",
         "README.md"
     ],
     "testFiles": [
