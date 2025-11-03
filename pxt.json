@@ -7,13 +7,15 @@
         "microphone": "*"
     },
     "files": [
-        "main.blocks",
+        "shims.d.ts",
+        "enums.d.ts",
         "banana.ts",
         "bananaShims.cpp",
         "README.md"
     ],
     "testFiles": [
-        "test.ts"
+        "test.ts",
+        "main.blocks"
     ],
     "targetVersions": {
         "target": "8.0.18",
