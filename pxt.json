@@ -8,8 +8,8 @@
     },
     "files": [
         "main.blocks",
-        "main.ts",
-        "MathShims.cpp",
+        "banana.ts",
+        "bananaShims.cpp",
         "README.md"
     ],
     "testFiles": [
