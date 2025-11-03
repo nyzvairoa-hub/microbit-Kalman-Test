@@ -10,8 +10,8 @@ namespace banana{
         return left + right;
     }
 
-    int banana_minus(int right, int left){
-        return right - left;
+    int banana_minus(int left, int right){
+        return left - right;
     }
 
     int banana_mult(int bananas){
