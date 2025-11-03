@@ -81,4 +81,12 @@ namespace banana {
         // so the TypeScript code will always run
         return n;
     }
+    
+    //% blockId=banana_banana_heavy_calc
+    //% block="Heavy Calculation"
+    //% help=github:carlosperate/pxt-banana/docs/bananaHeavyCalc
+    //% shim=banana::bananaHeavyCalc
+    export function bananaHeavyCalc(n: number): number{
+        return n;
+    }
 }
