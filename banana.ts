@@ -39,7 +39,7 @@ namespace banana {
      * @param n number of bananas
      */
     //% blockId=banana_banana_minus
-    //% block="minus your bananas $n | + $m"
+    //% block="minus your bananas $n | - $m"
     //% help=github:carlosperate/pxt-banana/docs/banana_add
     //% shim=banana::banana_minus
     export function bananaMinus(n: number, m: number): number {
