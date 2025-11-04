@@ -82,12 +82,4 @@ namespace banana {
         return n;
     }
     
-    //%
-    int bananaHeavyCalc(){
-        int result = 0;
-        for (int i = 0; i < 100000; i++){
-            result = result + i;
-        }
-        return result
-    }
 }
