@@ -76,7 +76,7 @@ namespace banana {
     //% block="how many bananas (V2 only) $n"
     //% parts="v2"
     //% shim=banana::bananas_v2_only
-    export function bananasV2Only(n: number): number {
+    export function bananasV2Only(){
         // The simulator does not differentiate between board version
         // so the TypeScript code will always run
         return n;
