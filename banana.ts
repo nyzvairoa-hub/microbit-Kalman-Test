@@ -83,7 +83,7 @@ namespace banana {
     }
 
     //% blockId=bananas_v2_mult
-    //% block="price and banana"
+    //% block="price $n and banana $m"
     //%shim=banana::banana_multV2
     export function bananaV2Mult(n: number, m: number): number{
         return n * m;
