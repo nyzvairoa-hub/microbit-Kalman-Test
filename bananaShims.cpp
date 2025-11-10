@@ -41,7 +41,7 @@ namespace banana{
 
     //%
     int bananaLoop(int n, int times){
-        for(int i = 0; i < times; i++){
+        for(int i = 0; i <= times; i++){
             n += i;
         }
         return n;
