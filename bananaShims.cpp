@@ -33,4 +33,9 @@ namespace banana{
             target_panic(PANIC_VARIANT_NOT_SUPPORTED);
         #endif
     }
+
+    //%
+    int banana_multV2(int n, int m){
+        return n*m;
+    }
 }
