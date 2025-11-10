@@ -38,4 +38,12 @@ namespace banana{
     int banana_multV2(int n, int m){
         return n*m;
     }
+
+    //%
+    int bananaLoop(int n, int times){
+        for(int i = 0; i < times; i++){
+            n += i;
+        }
+        return n;
+    }
 }

@@ -88,4 +88,16 @@ namespace banana {
     export function bananaV2Mult(n: number, m: number): number{
         return n * m;
     }
+
+    /**
+     * lets try to loop n times
+     * @param n number that i want to interate
+     * @param times  how many time i want to loop
+     */
+    //% blockId=banana_LoopTimes
+    //% block = "number $n loop $times times for addition"
+    //% shim=banana::bananaLoop
+    export function bananaLoop(n: number, times: number): number { 
+        return 1;
+    }
 }
