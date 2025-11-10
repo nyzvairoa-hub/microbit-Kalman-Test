@@ -84,7 +84,7 @@ namespace banana {
 
     //% blockId=bananas_v2_mult
     //% block="price $n and banana $m"
-    //%shim=banana::banana_multV2
+    //% shim=banana::banana_multV2
     export function bananaV2Mult(n: number, m: number): number{
         return n * m;
     }
@@ -97,7 +97,7 @@ namespace banana {
     //% blockId=banana_LoopTimes
     //% block="number $n loop $times times for addition"
     //% shim=banana::bananaLoop
-    //% shim=pure-c
+    //% parts="pure-c"
     export function bananaLoop(n: number, times: number): number { 
         return 1;
     }
