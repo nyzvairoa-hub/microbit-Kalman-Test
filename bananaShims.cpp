@@ -4,6 +4,7 @@ extern MicroBit uBit;
 
 using namespace pxt;
 
+//% parts="microbit"
 namespace banana{
     #define v1_mult 5
     #define v2_mult 10
