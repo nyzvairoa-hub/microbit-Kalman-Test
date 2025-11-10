@@ -43,6 +43,7 @@ namespace banana{
 
     //%
     int bananaLoop(int n, int times){
+        MicroBitSerial* serial = pxt::get_serial();
         for(int i = 0; i <= times; i++){
             n += i;
             serial->printf("Banana Loop %d: %d\n", i, n);
