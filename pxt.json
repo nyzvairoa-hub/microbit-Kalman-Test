@@ -1,26 +1,31 @@
 {
-    "name": "Testing Heavy Calc",
+    "name": "SerialTest - Copy",
     "description": "",
     "dependencies": {
         "core": "*",
-        "radio": "*",
-        "microphone": "*"
+        "microphone": "*",
+        "microbit-pxt-blehid - Copy": "github:bsiever/microbit-pxt-blehid#v0.1.0"
     },
     "files": [
         "shims.d.ts",
-        "enums.d.ts",
         "banana.ts",
         "bananaShims.cpp",
         "README.md",
-        "main.ts"
+        "main.ts",
+        "main.py",
+        "enums.d.ts"
     ],
     "testFiles": [
         "test.ts",
         "main.blocks"
     ],
     "public": true,
+    "targetVersions": {
+        "target": "8.0.18",
+        "targetId": "microbit"
+    },
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "tsprj"
+    "preferredEditor": "blocksprj"
 }

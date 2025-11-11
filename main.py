@@ -1,0 +1,1 @@
+basic.show_number(banana.banana_loop(0, 0))
