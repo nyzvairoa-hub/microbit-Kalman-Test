@@ -7,9 +7,11 @@
         "microphone": "*"
     },
     "files": [
+        "README.md",
+        "shims.d.ts",
+        "enums.d.ts",
         "banana.ts",
         "bananaShims.cpp",
-        "README.md",
         "main.ts"
     ],
     "testFiles": [
