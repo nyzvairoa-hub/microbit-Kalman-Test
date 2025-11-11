@@ -4,7 +4,8 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*"
+        "microphone": "*",
+        "microbit-v2": "*"
     },
     "files": [
         "shims.d.ts",
@@ -19,6 +20,10 @@
         "main.blocks"
     ],
     "public": true,
+    "targetVersions": {
+        "target": "6.0.26",
+        "targetId": "microbit"
+    },
     "supportedTargets": [
         "microbit"
     ],
