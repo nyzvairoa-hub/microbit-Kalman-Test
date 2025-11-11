@@ -1,6 +1,6 @@
 #include "pxt.h" // Essential Micro:bit/MakeCode header
 //#include "MicroBitSerial.h"
-//#include "MicroBit.h"
+#include "MicroBit.h"
 //extern MicroBit uBit;
 //uBit.init();
 
@@ -44,15 +44,14 @@ namespace banana{
     }
 
     //%
-    int bananaLoop(int n, int times){
+    void bananaLoop(int n, int times){
         //MicroBitSerial* serial = pxt::get_serial();
         //MicroBit* uBit = GET_MICROBIT();
 /        for(int i = 0; i <= times; i++){
             n += i;
+            uBit.serial.printf("Loop %d: n=%d\n", i, n);
         return n;
         }
-        //uBit->display.show(n);
-        //uBit->sleep(500);
     }
 }
 
