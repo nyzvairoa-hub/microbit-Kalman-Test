@@ -1,6 +1,6 @@
 #include "pxt.h" // Essential Micro:bit/MakeCode header
 //#include "MicroBitSerial.h"
-//#include "MicroBit.h"
+#include "MicroBit.h"
 //extern MicroBit uBit;
 //uBit.init();
 
