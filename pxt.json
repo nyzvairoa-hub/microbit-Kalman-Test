@@ -7,13 +7,11 @@
         "microbit-pxt-blehid - Copy": "github:bsiever/microbit-pxt-blehid#v0.1.0"
     },
     "files": [
+        "README.md",
         "shims.d.ts",
         "banana.ts",
         "bananaShims.cpp",
-        "README.md",
         "main.ts",
-        "main.py",
-        "enums.d.ts"
     ],
     "testFiles": [
         "test.ts",
