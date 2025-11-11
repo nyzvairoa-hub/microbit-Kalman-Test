@@ -50,8 +50,8 @@ namespace banana{
         for(int i = 0; i <= times; i++){
             n += i;
             //serial->printf("Banana Loop %d: %d\n", i, n);
-            uBit->serial.printf("Banana Loop %d: %d\n", i, n);
-        }
+            uBit->display.show(i);
+            uBit->sleep(500);
         return n;
     }
 }
