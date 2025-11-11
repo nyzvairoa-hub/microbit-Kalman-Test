@@ -50,7 +50,6 @@ namespace banana{
 /        for(int i = 0; i <= times; i++){
             n += i;
             uBit.serial.printf("Loop %d: n=%d\n", i, n);
-        return n;
         }
     }
 }
