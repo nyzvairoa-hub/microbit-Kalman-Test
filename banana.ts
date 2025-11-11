@@ -97,7 +97,7 @@ namespace banana {
     //% blockId=banana_LoopTimes
     //% block="number $n loop $times times for addition"
     //% shim=banana::bananaLoop
-    //% parts="microbit"
+    //% parts="pure-c"
     export function bananaLoop(n: number, times: number): number { 
         return 1;
     }
