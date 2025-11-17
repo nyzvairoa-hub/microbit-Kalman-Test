@@ -66,6 +66,7 @@ namespace banana{
         }
     }
 
+    //%
     void banana_run(){
         if(!banana_loop_true){
             banana_loop_true = true;
@@ -73,6 +74,7 @@ namespace banana{
         }
     }
 
+    //%
     void banana_stop(){
         banana_loop_true = false;
     }
