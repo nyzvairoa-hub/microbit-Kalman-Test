@@ -94,6 +94,6 @@ namespace banana {
     //% shim=banana::banana_getAccelX
     //% parts="accelerometer"
     export function getAccelX(): void{
-        return 0;
+        return;
     }
 }
