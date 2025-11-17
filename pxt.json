@@ -1,5 +1,5 @@
 {
-    "name": "Testing Heavy Calc",
+    "name": "SerialTest",
     "description": "",
     "dependencies": {
         "core": "*",
@@ -10,15 +10,20 @@
         "banana.ts",
         "bananaShims.cpp",
         "README.md",
-        "main.ts"
+        "main.ts",
+        "main.py"
     ],
     "testFiles": [
         "test.ts",
         "main.blocks"
     ],
     "public": true,
+    "targetVersions": {
+        "target": "8.0.18",
+        "targetId": "microbit"
+    },
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "tsprj"
+    "preferredEditor": "blocksprj"
 }
