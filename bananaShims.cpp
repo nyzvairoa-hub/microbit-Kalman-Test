@@ -42,6 +42,12 @@ namespace banana{
     }
 
     //%
+    void banana_multPrint(int n, int m){
+        int x = n * m;
+        uBit.serial.printf("Accel X: %d mg\r\n", x);
+    }
+
+    //%
     void banana_getAccelX(){
 
         int x = uBit.accelerometer.getX(); 
