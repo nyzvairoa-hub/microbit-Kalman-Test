@@ -13,7 +13,8 @@
         "banana.ts",
         "README.md",
         "bananaShims.cpp",
-        "main.ts"
+        "main.ts",
+        "main.py"
     ],
     "testFiles": [
         "test.ts",
@@ -21,7 +22,7 @@
     ],
     "public": true,
     "targetVersions": {
-        "target": "6.0.26",
+        "target": "8.0.18",
         "targetId": "microbit"
     },
     "supportedTargets": [

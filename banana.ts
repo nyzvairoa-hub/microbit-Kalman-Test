@@ -106,6 +106,6 @@ namespace banana {
     //% shim=banana::bananaLoop
     //% parts="codal"
     export function bananaLoop(n: number, times: number): void { 
-        return 1;
+        return;
     }
 }

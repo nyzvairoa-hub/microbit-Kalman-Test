@@ -1,3 +1,3 @@
-basic.forever(function () {
-    basic.showNumber(banana.bananaMinus(3, 1))
+input.onButtonPressed(Button.A, function on_button_pressed_a() {
+    serial.writeNumber(banana.getAccelX())
 })
