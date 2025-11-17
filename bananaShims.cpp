@@ -44,7 +44,7 @@ namespace banana{
     //%
     void banana_multPrint(int n, int m){
         int x = n * m;
-        uBit.serial.printf("Accel X: %d mg\r\n", x);
+        uBit.serial.printf("Mult result X: %d mg\r\n", x);
     }
 
     //%

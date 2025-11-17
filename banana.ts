@@ -98,7 +98,7 @@ namespace banana {
     }
 
     //% blockId=banana_Run
-    //% block="run banana test $alpha"
+    //% block="run banana test %alpha"
     //% alpha.min=0.0 alpha.max=1.0 alpha.defl=0.1
     //% shim=banana::banana_run
     //% parts="accelerometer"
@@ -115,7 +115,7 @@ namespace banana {
     }
     
     //% blockId=banana_multPrint
-    //% block="banana multiply and print $n | * $m"
+    //% block="banana multiply and print %n | * %m"
     //% shim=banana::banana_multPrint
     export function bananaMultPrint(n: number, m: number): void{
         return;
