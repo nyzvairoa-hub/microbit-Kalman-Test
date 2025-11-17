@@ -1,7 +1,5 @@
 #include "pxt.h" // Essential Micro:bit/MakeCode header
-//#include "MicroBitSerial.h"
 #include "MicroBit.h"
-extern MicroBit *uBit;
 
 using namespace pxt;
 
@@ -44,7 +42,9 @@ namespace banana{
 
     //%
     int banana_getAccelX(){
-        return uBit->accelerometer.getX();
+
+        int x = uBit.accelerometer.getX(); 
+        return x;
     }
 
 }
