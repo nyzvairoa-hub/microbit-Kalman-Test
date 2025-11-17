@@ -41,11 +41,10 @@ namespace banana{
     }
 
     //%
-    int banana_getAccelX(){
+    void banana_getAccelX(){
 
         int x = uBit.accelerometer.getX(); 
         uBit.serial.printf("Accel X: %d mg\r\n", x);
-        return x;
     }
 
 }
