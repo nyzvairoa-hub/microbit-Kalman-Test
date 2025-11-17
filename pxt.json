@@ -1,5 +1,5 @@
 {
-    "name": "Testing uBit",
+    "name": "Testing uBit - Copy",
     "description": "",
     "dependencies": {
         "core": "*",
@@ -27,5 +27,5 @@
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }

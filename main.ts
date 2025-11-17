@@ -1,1 +1,3 @@
-basic.showNumber(banana.bananaV2Mult(2, 3))
+basic.forever(function () {
+    banana.bananaMultPrint(3, 3)
+})

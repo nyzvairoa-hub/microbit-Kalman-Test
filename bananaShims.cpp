@@ -42,12 +42,6 @@ namespace banana{
     }
 
     //%
-    void banana_multPrint(int n, int m){
-        int x = n * m;
-        uBit.serial.printf("Mult result X: %d mg\r\n", x);
-    }
-
-    //%
     void banana_getAccelX(){
 
         int x = uBit.accelerometer.getX(); 
@@ -88,6 +82,12 @@ namespace banana{
     //%
     void banana_stop(){
         banana_loop_true = false;
+    }
+    
+    //%
+    void banana_multPrint(int n, int m){
+        int x = n * m;
+        uBit.serial.printf("Mult result X: %d mg\r\n", x);
     }
 
 }
