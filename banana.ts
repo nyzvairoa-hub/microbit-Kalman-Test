@@ -104,7 +104,6 @@ namespace banana {
     //% blockId=banana_LoopTimes
     //% block="number $n loop $times times for addition"
     //% shim=banana::bananaLoop
-    //% parts="codal"
     export function bananaLoop(n: number, times: number): void { 
         return;
     }
