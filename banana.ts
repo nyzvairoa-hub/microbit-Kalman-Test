@@ -98,10 +98,11 @@ namespace banana {
     }
 
     //% blockId=banana_Run
-    //% block="run banana test"
+    //% block="run banana test $alpha"
+    //% alpha.min=0.0 alpha.max=1.0 alpha.defl=0.1
     //% shim=banana::banana_run
     //% parts="accelerometer"
-    export function bananaRun(): void{
+    export function bananaRun(alpha: number): void{
         return;
     }
 

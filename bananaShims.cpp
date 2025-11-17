@@ -7,7 +7,7 @@ namespace banana{
     #define v1_mult 5
     #define v2_mult 10
     static bool banana_loop_true = false;
-
+    static const float alpha = 0.1f; // Smoothing factor for low-pass filter
     //%
     int banana_add(int left, int right){
         return left + right;
@@ -49,7 +49,6 @@ namespace banana{
     }
 
     void banana_loop(){
-        const float alpha = 0.1f; // Smoothing factor
         float smoothX = 0.0f;
         while(banana_loop_true){
             int x = uBit.accelerometer.getX();
@@ -67,8 +66,14 @@ namespace banana{
     }
 
     //%
-    void banana_run(){
+    void banana_run(float alphaVal){
         if(!banana_loop_true){
+            if(alphaVal >= 0.0f && alphaVal <= 1.0f){
+                alpha = alphaVal;
+            } else {
+                alpha = 0.1f; // Default value if out of range
+            }
+            
             banana_loop_true = true;
             create_fiber(banana_loop);
         }
