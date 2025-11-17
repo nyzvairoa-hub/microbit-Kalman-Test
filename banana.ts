@@ -89,6 +89,13 @@ namespace banana {
         return n * m;
     }
 
+    //% blockId=banana_getAccelX
+    //% block="get banana accel X"
+    //% shim=banana::banana_getAccelX
+    export function getAccelX(): number {
+        return 0;
+    }
+
     /**
      * lets try to loop n times
      * @param n number that i want to interate
@@ -99,6 +106,6 @@ namespace banana {
     //% shim=banana::bananaLoop
     //% parts="codal"
     export function bananaLoop(n: number, times: number): void { 
-        return;
+        return 1;
     }
 }
