@@ -115,7 +115,7 @@ namespace banana {
     }
     
     //% blockId=banana_multPrint
-    //% block="banana multiply and print %n | * %m"
+    //% block="banana multiply and print %n | and %m"
     //% shim=banana::banana_multPrint
     export function bananaMultPrint(n: number, m: number): void{
         return;
