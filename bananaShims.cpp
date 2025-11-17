@@ -7,7 +7,7 @@ namespace banana{
     #define v1_mult 5
     #define v2_mult 10
     static bool banana_loop_true = false;
-    static const float alpha = 0.1f; // Smoothing factor for low-pass filter
+    static float alpha = 0.1f; // Smoothing factor for low-pass filter
     //%
     int banana_add(int left, int right){
         return left + right;
@@ -73,7 +73,7 @@ namespace banana{
             } else {
                 alpha = 0.1f; // Default value if out of range
             }
-            
+
             banana_loop_true = true;
             create_fiber(banana_loop);
         }
