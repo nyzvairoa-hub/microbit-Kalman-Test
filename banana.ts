@@ -95,16 +95,4 @@ namespace banana {
     export function getAccelX(): number {
         return 0;
     }
-
-    /**
-     * lets try to loop n times
-     * @param n number that i want to interate
-     * @param times  how many time i want to loop
-     */
-    //% blockId=banana_LoopTimes
-    //% block="number $n loop $times times for addition"
-    //% shim=banana::bananaLoop
-    export function bananaLoop(n: number, times: number): void { 
-        return;
-    }
 }

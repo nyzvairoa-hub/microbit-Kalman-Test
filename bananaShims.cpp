@@ -48,15 +48,5 @@ namespace banana{
         return uBit->accelerometer.getX();
     }
 
-    //%
-    void bananaLoop(int n, int times){
-        //MicroBitSerial* serial = pxt::get_serial();
-        //MicroBit* uBit = GET_MICROBIT();
-        for(int i = 0; i <= times; i++){
-            n += i;
-            DMESG("Loop %d: n=%d", i, n);
-        }
-    return n;
-    }
 }
 
