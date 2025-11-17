@@ -1,11 +1,10 @@
 {
-    "name": "Testing Heavy Calc",
+    "name": "Testing uBit",
     "description": "",
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*",
-        "microbit-v2": "*"
+        "microphone": "*"
     },
     "files": [
         "shims.d.ts",
