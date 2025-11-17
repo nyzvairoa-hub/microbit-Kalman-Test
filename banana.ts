@@ -96,4 +96,20 @@ namespace banana {
     export function getAccelX(): void{
         return;
     }
+
+    //% blockId=banana_Run
+    //% block="run banana test"
+    //% shim=banana::banana_run
+    //% parts="accelerometer"
+    export function bananaRun(): void{
+        return;
+    }
+
+    //% blockId=banana_Stop
+    //% block="stop banana test"
+    //% shim=banana::banana_stop
+    //% parts="accelerometer"
+    export function bananaStop(): void{
+        return;
+    } 
 }

@@ -47,5 +47,32 @@ namespace banana{
         uBit.serial.printf("Accel X: %d mg\r\n", x);
     }
 
+    void banana_loop(){
+        const float alpha = 0.1f; // Smoothing factor
+        float smoothX = 0.0f;
+        while(banana_loop_true){
+            int x = uBit.accelerometer.getX();
+            //int y = uBit.accelerometer.getY();
+            //int z = uBit.accelerometer.getZ();
+
+            float rawX = (float)x;
+            
+            smoothX = alpha * rawX + (1.0f - alpha) * smoothX;
+
+            uBit.serial.printf("Raw X: %d mg, Smooth X: %.2f mg\r\n", x, smoothX);
+        }
+    }
+
+    void banana_run(){
+        if(!banana_loop_true){
+            banana_loop_true = true;
+            create_fiber(banana_loop);
+        }
+    }
+
+    void banana_stop(){
+        banana_loop_true = false;
+    }
+
 }
 
