@@ -6,6 +6,7 @@ using namespace pxt;
 namespace banana{
     #define v1_mult 5
     #define v2_mult 10
+    static bool banana_loop_true = false;
 
     //%
     int banana_add(int left, int right){
@@ -60,6 +61,8 @@ namespace banana{
             smoothX = alpha * rawX + (1.0f - alpha) * smoothX;
 
             uBit.serial.printf("Raw X: %d mg, Smooth X: %.2f mg\r\n", x, smoothX);
+
+            fiber_sleep(10);
         }
     }
 
