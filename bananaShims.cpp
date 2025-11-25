@@ -73,7 +73,7 @@ namespace banana{
             } else {
                 alpha = 0.1f; // Default value if out of range
             }
-
+            uBit.serial.printf("Using alpha: %f\r\n", alpha);
             banana_loop_true = true;
             create_fiber(banana_loop);
         }
