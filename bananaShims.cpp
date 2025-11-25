@@ -59,7 +59,7 @@ namespace banana{
             
             smoothX = alpha * rawX + (1.0f - alpha) * smoothX;
 
-            uBit.serial.printf("Raw X: %d mg, Smooth X: %.2f mg\r\n", x, smoothX);
+            uBit.serial.printf("Raw X: %d mg, Smooth X: %f mg\r\n", x, smoothX);
 
             fiber_sleep(10);
         }
