@@ -11,18 +11,17 @@ namespace banana {
     }
 
     //% blockId=banana_Run
-    //% block="run banana test %alpha"
-    //% alpha.min=0.0 alpha.max=1.0 alpha.defl=0.1
+    //% block="run banana test with speed %speed | and direction %dir"
+    //% speed.min=0 speed.max=255 speed.defl=100 // <-- Good constraints added here
+    //% dir.min=1 dir.max=2 dir.defl=1 // <-- Ensures direction is 1 (FORWARD) or 2 (BACKWARD)
     //% shim=banana::banana_run
-    //% parts="accelerometer"
-    export function bananaRun(alpha: number): void{
+    export function bananaRun(speed: number, dir: number): void{
         return;
     }
 
     //% blockId=banana_Stop
     //% block="stop banana test"
     //% shim=banana::banana_stop
-    //% parts="accelerometer"
     export function bananaStop(): void{
         return;
     }
