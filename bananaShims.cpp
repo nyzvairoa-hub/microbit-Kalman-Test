@@ -28,7 +28,7 @@ namespace banana {
         uint8_t buff[2];
         buff[0] = reg;
         buff[1] = value;
-        uBit.i2c.write(PCA9685_ADDRESS, (const char*)buff, 2);
+        uBit.i2c.write(PCA9685_ADDRESS, buff, 2);
     }
 
     void i2cWrite16x2(uint8_t reg, int value){
@@ -36,7 +36,7 @@ namespace banana {
         buff[0] = reg;
         buff[1] = value & 0xFF; 
         buff[2] = (value >> 8) & 0xFF; 
-        uBit.i2c.write(PCA9685_ADDRESS, (const char*)buff, 3);
+        uBit.i2c.write(PCA9685_ADDRESS, buff, 3);
     }
 
     void set_pwm(int channel, int onValue, int offValue){
