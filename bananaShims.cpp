@@ -111,6 +111,7 @@ namespace banana {
     void i2cInit(){
 
         scanI2C();
+        fiber_sleep(50);
         i2cWrite(PCA9685_MODE1, 0x00);
         fiber_sleep(10);
         i2cWrite(PCA9685_MODE1, 0x10); 
