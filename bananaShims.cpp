@@ -8,38 +8,6 @@ namespace banana{
     #define v2_mult 10
     static bool banana_loop_true = false;
     static float alpha = 0.1f; // Smoothing factor for low-pass filter
-    //%
-    int banana_add(int left, int right){
-        return left + right;
-    }
-
-    //%
-    int banana_minus(int left, int right){
-        return left - right;
-    }
-
-    //%
-    int banana_mult(int bananas){
-        #if MICROBIT_CODAL
-            return bananas * v2_mult;
-        #else
-            return bananas * v1_mult;
-        #endif
-    }
-
-    //%
-    int bananas_v2_only(int bananas){
-        #if MICROBIT_CODAL
-            return bananas;
-        #else
-            target_panic(PANIC_VARIANT_NOT_SUPPORTED);
-        #endif
-    }
-
-    //%
-    int banana_multV2(int n, int m){
-        return n*m;
-    }
 
     //%
     void banana_getAccelX(){
