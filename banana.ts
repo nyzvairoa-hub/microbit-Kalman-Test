@@ -12,6 +12,8 @@ namespace banana {
 
     //% blockId=banana_Run
     //% block="run banana test with speed %speed | and direction %dir"
+    //% speed.min=0 speed.max=255 speed.defl=100
+    //% dir.min=1 dir.max = 2 dir.defl=1
     //% shim=banana::banana_run
     export function bananaRun(speed: number, dir: number): void{
         return;
