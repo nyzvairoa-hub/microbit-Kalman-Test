@@ -80,27 +80,36 @@ namespace banana {
     }
 
     void scanI2C() {
-        uBit.serial.printf("Scanning I2C addresses...\r\n");
-        int found = 0;
-        for (int i = 0; i < 128; i++) {
-            // Try to write a dummy byte to every address
+        uBit.serial.printf("\r\n--- STARTING I2C SCAN ---\r\n");
+        int devices_found = 0;
+        
+        // Scan standard 7-bit addresses (0x08 to 0x77) to avoid reserved blocks
+        for (int i = 8; i < 120; i++) {
             uint8_t dummy = 0;
             #if MICROBIT_CODAL
-                int res = uBit.i2c.write(i << 1, &dummy, 0); // V2 uses 8-bit address (shifted)
+                // V2: address is shifted left by 1 (8-bit address)
+                int res = uBit.i2c.write(i << 1, &dummy, 0); 
             #else
-                int res = uBit.i2c.write(i << 1, (char*)&dummy, 0); // V1 uses 8-bit address
+                int res = uBit.i2c.write(i << 1, (char*)&dummy, 0);
             #endif
             
             if (res == 0) {
-                uBit.serial.printf("Found device at: 0x%x\r\n", i);
-                found++;
+                uBit.serial.printf("DEVICE FOUND AT: 0x%x (%d)\r\n", i, i);
+                devices_found++;
+                uBit.sleep(10); // Print delay
             }
         }
-        if (found == 0) uBit.serial.printf("No I2C devices found!\r\n");
+        
+        if (devices_found == 0) {
+            uBit.serial.printf("NO DEVICES FOUND! Check Power/Connections.\r\n");
+        } else {
+            uBit.serial.printf("Scan Complete. Found %d devices.\r\n", devices_found);
+        }
+        uBit.serial.printf("-------------------------\r\n");
     }
 
     void i2cInit(){
-        
+
         scanI2C();
         i2cWrite(PCA9685_MODE1, 0x00);
         fiber_sleep(10);
