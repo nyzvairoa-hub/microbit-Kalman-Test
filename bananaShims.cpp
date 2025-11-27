@@ -67,15 +67,15 @@ namespace banana {
         if(dir == FORWARD){
             set_pwm(M1_IN1_CHANN, 0, duty_cycle);
             set_pwm(M1_IN2_CHANN, 0, 0);
-            uBit.serial.printf("M1: FWD %d\r\n", speed);
+            //uBit.serial.printf("M1: FWD %d\r\n", speed);
         } else if(dir == BACKWARD){
             set_pwm(M1_IN1_CHANN, 0, 0);
             set_pwm(M1_IN2_CHANN, 0, duty_cycle);
-            uBit.serial.printf("M1: REV %d\r\n", speed);
+            //uBit.serial.printf("M1: REV %d\r\n", speed);
         } else{
             set_pwm(M1_IN1_CHANN, 0, 0);
             set_pwm(M1_IN2_CHANN, 0, 0);
-            uBit.serial.printf("M1: STOP\r\n");
+            //uBit.serial.printf("M1: STOP\r\n");
         }
     }
 
