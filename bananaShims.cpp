@@ -88,12 +88,6 @@ namespace banana {
     // The parser needs the code block { ... } to be right here!
 
     //%
-    void banana_getAccelX(){
-        int x = uBit.accelerometer.getX(); 
-        uBit.serial.printf("Accel X: %d mg\r\n", x);
-    }
-
-    //%
     void banana_run(int speed, int dir){
         if(!banana_loop_true){
             i2cInit();
@@ -114,12 +108,6 @@ namespace banana {
         globalDir = 0;
         globalSpeed = 0;
         banana_loop_true = false;
-    }
-    
-    //%
-    void banana_multPrint(int n, int m){
-        int x = n * m;
-        uBit.serial.printf("Mult: %d\r\n", x);
     }
 
 } // --- END OF NAMESPACE ---
