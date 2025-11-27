@@ -8,23 +8,21 @@ using namespace pxt;
 #define PCA9685_MODE1 0x00
 #define PCA9685_PRESCALE 0xFE
 #define LED0_ON_L 0x06
-
 #define M1_IN1_CHANN 4
 #define M1_IN2_CHANN 5
-
 #define FORWARD 1
 #define BACKWARD 2
 
-// --- GLOBAL VARIABLES ---
-// These remain outside to ensure fiber safety
-static bool banana_loop_true = false; 
-static int globalSpeed = 0;
-static int globalDir = 0;
-
-// --- NAMESPACE & LOGIC ---
+// --- NAMESPACE START ---
 namespace banana {
 
-    // --- HELPER FUNCTIONS (Internal) ---
+    // --- GLOBAL VARIABLES ---
+    // Must be static to be fiber-safe
+    static bool banana_loop_true = false; 
+    static int globalSpeed = 0;
+    static int globalDir = 0;
+
+    // --- 1. HELPER FUNCTIONS (Logic INSIDE namespace) ---
 
     void i2cWrite(uint8_t reg, uint8_t value){
         uint8_t buff[2];
@@ -77,7 +75,7 @@ namespace banana {
         i2cWrite(PCA9685_MODE1, 0xa0); 
     }
 
-    // --- FIBER LOOP ---
+    // --- 2. FIBER LOOP (Logic INSIDE namespace) ---
     void banana_loop(){
         while(banana_loop_true){
             control_motor1(globalSpeed, globalDir);
@@ -86,7 +84,8 @@ namespace banana {
         control_motor1(0, 0);
     }
 
-    // --- EXPORTED SHIMS (Blocks) ---
+    // --- 3. EXPORTED SHIMS (Logic INSIDE namespace) ---
+    // The parser needs the code block { ... } to be right here!
 
     //%
     void banana_getAccelX(){
@@ -122,4 +121,5 @@ namespace banana {
         int x = n * m;
         uBit.serial.printf("Mult: %d\r\n", x);
     }
-}
+
+} // --- END OF NAMESPACE ---
