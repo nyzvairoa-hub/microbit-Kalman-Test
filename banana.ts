@@ -11,9 +11,7 @@ namespace banana {
     }
 
     //% blockId=banana_Run
-    //% block="run banana test with speed $speed | and direction $dir"
-    //% speed.min=0 speed.max=255 speed.defl=100 
-    //% dir.min=1 dir.max=2 dir.defl=1 
+    //% block="run banana test with speed %speed | and direction %dir"
     //% shim=banana::banana_run
     export function bananaRun(speed: number, dir: number): void{
         return;
@@ -27,7 +25,7 @@ namespace banana {
     }
     
     //% blockId=banana_multPrint
-    //% block="banana multiply and print $n | and $m"
+    //% block="banana multiply and print %n | and 5m"
     //% shim=banana::banana_multPrint
     export function bananaMultPrint(n: number, m: number): void{
         return;
