@@ -146,7 +146,7 @@ void banana::banana_run(int speed, int dir){
         globalDir = dir;
         banana_loop_true = true;
 
-        create_fiber(banana_loop);
+        create_fiber(banana::banana_loop);
     }
 }
 
