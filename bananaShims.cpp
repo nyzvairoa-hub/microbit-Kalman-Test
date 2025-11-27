@@ -53,10 +53,10 @@ namespace banana{
 
     void i2cInit();
 
+    void banana_loop();
+
     //%
     void banana_getAccelX();
-
-    void banana_loop();
 
     //%
     void banana_run(int speed, int dir);
@@ -81,8 +81,8 @@ void banana::i2cWrite16x2(uint8_t reg, int value){
 void banana::set_pwm(int channel, int onValue, int offValue){
     uint8_t reg = LED0_ON_L + 4 * channel;
 
-    i2cWrite16x2(reg, onValue);
-    i2cWrite16x2(reg + 2, offValue);
+    banana::i2cWrite16x2(reg, onValue);
+    banana::i2cWrite16x2(reg + 2, offValue);
 }
 
 void banana::control_motor1(int speed, int dir){
@@ -93,18 +93,18 @@ void banana::control_motor1(int speed, int dir){
 
     if(dir == FORWARD){
         //forward
-        set_pwm(M1_IN1_CHANN, 0, duty_cycle);
-        set_pwm(M1_IN2_CHANN, 0, 0);
+        banana::set_pwm(M1_IN1_CHANN, 0, duty_cycle);
+        banana::set_pwm(M1_IN2_CHANN, 0, 0);
         uBit.serial.printf("Direction: %d \r\n", dir);
     } else if(dir == BACKWARD){
         //backward
-        set_pwm(M1_IN1_CHANN, 0, 0);
-        set_pwm(M1_IN2_CHANN, 0, duty_cycle);
+        banana::set_pwm(M1_IN1_CHANN, 0, 0);
+        banana::set_pwm(M1_IN2_CHANN, 0, duty_cycle);
         uBit.serial.printf("Direction: %d \r\n", dir);
     } else{
         //stop
-        set_pwm(M1_IN1_CHANN, 0, 0);
-        set_pwm(M1_IN2_CHANN, 0, 0);
+        banana::set_pwm(M1_IN1_CHANN, 0, 0);
+        banana::set_pwm(M1_IN2_CHANN, 0, 0);
         uBit.serial.printf("Direction: STOP\r\n");
     }
 }
@@ -118,20 +118,20 @@ void banana::i2cWrite(uint8_t reg, uint8_t value){
 }
 
 void banana::i2cInit(){
-    i2cWrite(PCA9685_MODE1, 0x00);
+    banana::i2cWrite(PCA9685_MODE1, 0x00);
     fiber_sleep(10);
 
-    i2cWrite(PCA9685_MODE1, 0x01);
-    i2cWrite(PCA9685_PRESCALE, 0x79);
-    i2cWrite(PCA9685_MODE1, 0x00);
+    banana::i2cWrite(PCA9685_MODE1, 0x01);
+    banana::i2cWrite(PCA9685_PRESCALE, 0x79);
+    banana::i2cWrite(PCA9685_MODE1, 0x00);
     fiber_sleep(10);
-    i2cWrite(PCA9685_MODE1, 0xa0);
+    banana::i2cWrite(PCA9685_MODE1, 0xa0);
 }
 
 void banana::banana_loop(){
 
     while(banana_loop_true){
-        control_motor1(globalSpeed, globalDir);
+        banana::control_motor1(globalSpeed, globalDir);
 
         fiber_sleep(10);
     }
@@ -139,7 +139,7 @@ void banana::banana_loop(){
 
 void banana::banana_run(int speed, int dir){
     if(!banana_loop_true){
-        i2cInit();
+        banana::i2cInit();
 
         globalSpeed = speed;
         globalDir = dir;
@@ -150,7 +150,7 @@ void banana::banana_run(int speed, int dir){
 }
 
 void banana::banana_stop(){
-    control_motor1(0, 0);
+    banana::control_motor1(0, 0);
     globalDir = 0;
     globalSpeed = 0;
     banana_loop_true = false;
