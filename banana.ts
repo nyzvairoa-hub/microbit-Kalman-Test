@@ -11,7 +11,7 @@ namespace banana {
     }
 
     //% blockId=banana_Run
-    //% block="run banana test with speed $speed | and direction $dir"
+    //% block="run banana test with speed %speed | and direction %dir"
     //% speed.min=0 speed.max=255 speed.defl=100 // <-- Good constraints added here
     //% dir.min=1 dir.max=2 dir.defl=1 // <-- Ensures direction is 1 (FORWARD) or 2 (BACKWARD)
     //% shim=banana::banana_run
