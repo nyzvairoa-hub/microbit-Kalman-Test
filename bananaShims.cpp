@@ -70,8 +70,7 @@ namespace banana{
 }
 
 
-
-void i2cWrite16x2(uint8_t reg, int value){
+void banana::i2cWrite16x2(uint8_t reg, int value){
     uint8_t buff[3];
     buff[0] = reg;
     buff[1] = value & 0xFF; // low byte
@@ -79,14 +78,14 @@ void i2cWrite16x2(uint8_t reg, int value){
     uBit.i2c.write(PCA9685_ADDRESS, (const char*)buff, 3);
 }
 
-void set_pwm(int channel, int onValue, int offValue){
+void banana::set_pwm(int channel, int onValue, int offValue){
     uint8_t reg = LED0_ON_L + 4 * channel;
 
     i2cWrite16x2(reg, onValue);
     i2cWrite16x2(reg + 2, offValue);
 }
 
-void control_motor1(int speed, int dir){
+void banana::control_motor1(int speed, int dir){
     //scale the power from 0-255 to 0-4095
     int duty_cycle = (speed * 4095) / 255;
     if(duty_cycle < 0) duty_cycle = 0;
@@ -110,7 +109,7 @@ void control_motor1(int speed, int dir){
     }
 }
 
-void i2cWrite(uint8_t reg, uint8_t value){
+void banana::i2cWrite(uint8_t reg, uint8_t value){
     uint8_t buff[2];
     buff[0] = reg;
     buff[1] = value;
@@ -118,7 +117,7 @@ void i2cWrite(uint8_t reg, uint8_t value){
 
 }
 
-void i2cInit(){
+void banana::i2cInit(){
     i2cWrite(PCA9685_MODE1, 0x00);
     fiber_sleep(10);
 
