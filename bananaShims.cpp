@@ -30,10 +30,14 @@ namespace banana {
         buff[1] = value;
 
         #if MICROBIT_CODAL
-            uBit.i2c.write(PCA9685_ADDRESS, buff, 2);
+            int res = uBit.i2c.write(PCA9685_ADDRESS, buff, 2);
         #else
-            uBit.i2c.write(PCA9685_ADDRESS, (char*)buff, 2);
+            int res = uBit.i2c.write(PCA9685_ADDRESS, (char*)buff, 2);
         #endif
+        
+        if (res != 0) {
+            uBit.serial.printf("I2C Write Error: %d at reg %d\r\n", res, reg);
+        }
     }
 
     void i2cWrite16x2(uint8_t reg, int value){
@@ -75,7 +79,29 @@ namespace banana {
         }
     }
 
+    void scanI2C() {
+        uBit.serial.printf("Scanning I2C addresses...\r\n");
+        int found = 0;
+        for (int i = 0; i < 128; i++) {
+            // Try to write a dummy byte to every address
+            uint8_t dummy = 0;
+            #if MICROBIT_CODAL
+                int res = uBit.i2c.write(i << 1, &dummy, 0); // V2 uses 8-bit address (shifted)
+            #else
+                int res = uBit.i2c.write(i << 1, (char*)&dummy, 0); // V1 uses 8-bit address
+            #endif
+            
+            if (res == 0) {
+                uBit.serial.printf("Found device at: 0x%x\r\n", i);
+                found++;
+            }
+        }
+        if (found == 0) uBit.serial.printf("No I2C devices found!\r\n");
+    }
+
     void i2cInit(){
+        
+        scanI2C();
         i2cWrite(PCA9685_MODE1, 0x00);
         fiber_sleep(10);
         i2cWrite(PCA9685_MODE1, 0x10); 
