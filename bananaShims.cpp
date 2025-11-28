@@ -4,7 +4,7 @@
 using namespace pxt;
 
 // --- CONSTANTS ---
-#define PCA9685_ADDRESS 0x40
+#define PCA9685_ADDRESS (0x40 << 1)
 #define PCA9685_MODE1 0x00
 #define PCA9685_PRESCALE 0xFE
 #define LED0_ON_L 0x06
@@ -106,16 +106,18 @@ namespace banana {
         scanI2C(); // Run scan first
         
         // Give the bus a moment to settle after scanning
-        uBit.sleep(100); 
+        uBit.sleep(50); 
 
         // Try initialization sequence
         i2cWrite(PCA9685_MODE1, 0x00);
         uBit.sleep(10);
         i2cWrite(PCA9685_MODE1, 0x10); 
+        uBit.sleep(5);
         i2cWrite(PCA9685_PRESCALE, 0x79); 
         i2cWrite(PCA9685_MODE1, 0x00); 
-        uBit.sleep(10);
+        uBit.sleep(5);
         i2cWrite(PCA9685_MODE1, 0xa0); 
+        uBit.sleep(5);
     }
 
     // --- 2. FIBER LOOP ---
