@@ -127,7 +127,7 @@ namespace banana {
 
     // --- 2. FIBER LOOP ---
     void banana_loop(){
-        while(banana_loop_true){
+        while(banana_loop_bool){
             for(int i = 0; i < 4; i++){
                 controlMotor(i);
             }
