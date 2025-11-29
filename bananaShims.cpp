@@ -8,8 +8,13 @@ using namespace pxt;
 #define PCA9685_MODE1 0x00
 #define PCA9685_PRESCALE 0xFE
 #define LED0_ON_L 0x06
-#define M1_IN1_CHANN 4
-#define M1_IN2_CHANN 5
+
+#define M1_CHANN 4
+#define M2_CHANN 6
+#define M3_CHANN 8
+#define M4_CHANN 10
+
+#define STOP 0
 #define FORWARD 1
 #define BACKWARD 2
 
@@ -17,10 +22,10 @@ using namespace pxt;
 namespace banana {
 
     // --- GLOBAL VARIABLES ---
-    static bool banana_loop_true = false; 
-    static int globalSpeed = 0;
-    static int globalDir = 0;
-
+    static bool banana_loop_bool = false; 
+    static int globalSpeed[4] = {0,0,0,0} ;
+    static int globalDir[4] = {0,0,0,0} ;
+    static int globalChannel[4] = {4,6,8,10};
     // --- 1. HELPER FUNCTIONS ---
 
     void i2cWrite(uint8_t reg, uint8_t value){
@@ -58,22 +63,27 @@ namespace banana {
         i2cWrite16x2(reg + 2, offValue);
     }
 
-    void control_motor1(int speed, int dir){
+    void controlMotor(int motorID){
+
+        int speed = globalSpeed[motorID];
+        int dir = globalDir[motorID];
+        int channel = globalChannel[motorID];
+
         int duty_cycle = (speed * 4095) / 255;
         if(duty_cycle < 0) duty_cycle = 0;
         if(duty_cycle > 4095) duty_cycle = 4095;
 
         if(dir == FORWARD){
-            set_pwm(M1_IN1_CHANN, 0, duty_cycle);
-            set_pwm(M1_IN2_CHANN, 0, 0);
+            set_pwm(channel, 0, duty_cycle);
+            set_pwm(channel + 1, 0, 0);
             //uBit.serial.printf("M1: FWD %d\r\n", speed);
         } else if(dir == BACKWARD){
             set_pwm(M1_IN1_CHANN, 0, 0);
-            set_pwm(M1_IN2_CHANN, 0, duty_cycle);
+            set_pwm(M1_IN2_CHANN + 1, 0, duty_cycle);
             //uBit.serial.printf("M1: REV %d\r\n", speed);
         } else{
             set_pwm(M1_IN1_CHANN, 0, 0);
-            set_pwm(M1_IN2_CHANN, 0, 0);
+            set_pwm(M1_IN2_CHANN + 1, 0, 0);
             //uBit.serial.printf("M1: STOP\r\n");
         }
     }
@@ -123,46 +133,27 @@ namespace banana {
     // --- 2. FIBER LOOP ---
     void banana_loop(){
         while(banana_loop_true){
-            control_motor1(globalSpeed, globalDir);
-            uBit.sleep(100);
-        }
-        control_motor1(0, 0);
-    }
-
-    // --- 3. EXPORTED SHIMS ---
-
-    //%
-    void banana_getAccelX(){
-        int x = uBit.accelerometer.getX(); 
-        uBit.serial.printf("Accel X: %d mg\r\n", x);
-    }
-
-    //%
-    void banana_run(int speed, int dir){
-        if(!banana_loop_true){
-            i2cInit();
-            globalSpeed = speed;
-            globalDir = dir;
-            banana_loop_true = true;
-            create_fiber(banana_loop);
-        } else {
-            globalSpeed = speed;
-            globalDir = dir;
+            for(int i = 0; i < 4; i++){
+                controlMotor(i);
+            }
+            fiber_sleep(20);
         }
     }
 
     //%
-    void banana_stop(){
-        control_motor1(0, 0);
-        globalDir = 0;
-        globalSpeed = 0;
-        banana_loop_true = false;
-    }
-    
-    //%
-    void banana_multPrint(int n, int m){
-        int x = n * m;
-        uBit.serial.printf("Mult: %d\r\n", x);
+    void banana_init(){
+     if(!banana_loop_bool){
+        i2cInit();
+        banana_loop_bool = true;
+        create_fiber(banana_loop);
+        }
     }
 
-} // --- END NAMESPACE ---
+    //%
+    void banana_set_motor(int motorID, int speed, int dir){
+        if(motorID >= 0 && motorID < 4){
+            globalSpeed[motorID] = speed;
+            globalDir[motorID] = dir;
+        }
+    }
+} 
