@@ -9,11 +9,6 @@ using namespace pxt;
 #define PCA9685_PRESCALE 0xFE
 #define LED0_ON_L 0x06
 
-#define M1_CHANN 4
-#define M2_CHANN 6
-#define M3_CHANN 8
-#define M4_CHANN 10
-
 #define STOP 0
 #define FORWARD 1
 #define BACKWARD 2
@@ -78,12 +73,12 @@ namespace banana {
             set_pwm(channel + 1, 0, 0);
             //uBit.serial.printf("M1: FWD %d\r\n", speed);
         } else if(dir == BACKWARD){
-            set_pwm(M1_IN1_CHANN, 0, 0);
-            set_pwm(M1_IN2_CHANN + 1, 0, duty_cycle);
+            set_pwm(channel, 0, 0);
+            set_pwm(channel + 1, 0, duty_cycle);
             //uBit.serial.printf("M1: REV %d\r\n", speed);
         } else{
-            set_pwm(M1_IN1_CHANN, 0, 0);
-            set_pwm(M1_IN2_CHANN + 1, 0, 0);
+            set_pwm(channel, 0, 0);
+            set_pwm(channel + 1, 0, 0);
             //uBit.serial.printf("M1: STOP\r\n");
         }
     }
