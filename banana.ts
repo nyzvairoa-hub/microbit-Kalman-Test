@@ -33,13 +33,13 @@ namespace banana {
     //% block="run motor %motor with speed %speed and direction %dir"
     //% speed.min=0 speed.max=255 speed.defl=100
     export function bananaRun(motor: bananaMotor, speed: number, dir: bananDir): void{
-        _set_motor
+        _set_motor(motor, speed, dir);
     }
 
     //% blockId=banana_Stop
     //% block="stop motor %motor"
     export function bananaStop(motor: bananaMotor): void{
-        _set_motor(motor, 0, 0)
+        _set_motor(motor, 0, 0);
     }
     
 }
