@@ -20,7 +20,7 @@ namespace banana {
     static bool banana_loop_bool = false; 
     static int globalSpeed[4] = {0,0,0,0} ;
     static int globalDir[4] = {0,0,0,0} ;
-    static int globalChannel[4] = {4,6,8,10};
+    static int globalChannel[4] = {4,6,10,8};
     // --- 1. HELPER FUNCTIONS ---
 
     void i2cWrite(uint8_t reg, uint8_t value){
