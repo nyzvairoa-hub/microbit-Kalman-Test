@@ -1,6 +1,7 @@
 #include "pxt.h" 
 #include "MicroBit.h"
-
+#include "nrf_gpio.h"
+#include "pxtbase.h"
 using namespace pxt;
 
 // --- CONSTANTS ---
