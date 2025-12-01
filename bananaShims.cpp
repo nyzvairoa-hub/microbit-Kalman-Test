@@ -178,7 +178,7 @@ namespace banana {
         sensorY = y;
         objectDectected = isDetected;
 
-        ubit.serial.printf("HuskyLens Data - X: %d, Y: %d, Detected: %d\r\n", sensorX, sensorY, objectDectected);
+        uBit.serial.printf("HuskyLens Data - X: %d, Y: %d, Detected: %d\r\n", sensorX, sensorY, objectDectected);
     }
 
 } 
