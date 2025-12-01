@@ -13,6 +13,17 @@ using namespace pxt;
 #define FORWARD 1
 #define BACKWARD 2
 
+namespace i2cHusky{
+    void init(){
+        nrf_gpio_cfg(32, NRF_GPIO_PIN_DIR_INPUT,
+                    RF_GPIO_PIN_DIR_CONNECT,
+                    RF_GPIO_PIN_DIR_PULLDOWN,
+                    RF_GPIO_PIN_DIR_S0D1,
+                    RF_GPIO_PIN_DIR_NOSENSE);
+    }
+}
+
+
 // --- NAMESPACE START ---
 namespace banana {
 
@@ -21,6 +32,14 @@ namespace banana {
     static int globalSpeed[4] = {0,0,0,0} ;
     static int globalDir[4] = {0,0,0,0} ;
     static int globalChannel[4] = {4,6,10,8};
+
+    // --- Variable for sensor ---//
+    static int sensorX = 0;
+    static int sensorY = 0;
+    static int width = 0;
+    static int height = 0;
+    static bool objectDectected = false;
+
     // --- 1. HELPER FUNCTIONS ---
 
     void i2cWrite(uint8_t reg, uint8_t value){
@@ -151,4 +170,14 @@ namespace banana {
             globalDir[motorID] = dir;
         }
     }
+
+    //%
+    void husky_lens_data(int x, int y, bool isDetected){
+        sensorX = x;
+        sensorY = y;
+        objectDectected = isDetected;
+
+        ubit.serial.printf("HuskyLens Data - X: %d, Y: %d, Detected: %d\r\n", sensorX, sensorY, objectDectected);
+    }
+
 } 

@@ -23,6 +23,9 @@ namespace banana {
     //% shim=banana::banana_set_motor
     function _set_motor(id: number, speed: number, dir: number): void { return; }
 
+    //% shim=banana::husky_lens_data
+    function _husky_lens_data(x: number, y: number, isDetected: boolean): void { return; }
+
     //% blockId=banana_StartMotor
     //% block="start motor"
     export function startMotor(): void{
@@ -42,4 +45,10 @@ namespace banana {
         _set_motor(motor, 0, 0);
     }
     
+    //% blockID:banana_HuskyLensData
+    //% block="HuskyLens data x: %x y: %y isDetected: %isDetected"
+    //% weight=50
+    export function huskyLensData(x: number, y: number, isDetected: boolean): void{
+        _husky_lens_data(x, y, isDetected);
+    }
 }
