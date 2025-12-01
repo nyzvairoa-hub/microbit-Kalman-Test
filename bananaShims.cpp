@@ -17,10 +17,10 @@ using namespace pxt;
 namespace i2cHusky{
     void init(){
         nrf_gpio_cfg(32, NRF_GPIO_PIN_DIR_INPUT,
-                    RF_GPIO_PIN_DIR_CONNECT,
-                    RF_GPIO_PIN_DIR_PULLDOWN,
-                    RF_GPIO_PIN_DIR_S0D1,
-                    RF_GPIO_PIN_DIR_NOSENSE);
+                    NRF_GPIO_PIN_DIR_CONNECT,
+                    NRF_GPIO_PIN_DIR_PULLDOWN,
+                    NRF_GPIO_PIN_DIR_S0D1,
+                    NRF_GPIO_PIN_DIR_NOSENSE);
     }
 }
 
