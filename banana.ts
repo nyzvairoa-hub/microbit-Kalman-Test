@@ -14,7 +14,7 @@ enum bananDir{
 }
 
 // Icon unicode characters can be found at: http://fontawesome.io/icons/
-//% color=#c2b711 weight=100 icon="\uf1ec" block="Banana Meeeeee" advanced=false
+//% color=#c2b711 weight=100 icon="\uf1ec" block="Robot Smooth" advanced=false
 namespace banana {
 
     //% shim=banana::banana_init
@@ -24,7 +24,7 @@ namespace banana {
     function _set_motor(id: number, speed: number, dir: number): void { return; }
 
     //% shim=banana::husky_lens_data
-    function _husky_lens_data(x: number, y: number, isDetected: boolean): void { return; }
+    function _husky_lens_data(x: number, y: number, weight: number, height: number, isDetected: boolean): void { return; }
 
     //% blockId=banana_StartMotor
     //% block="start motor"
@@ -46,9 +46,9 @@ namespace banana {
     }
     
     //% blockID:banana_HuskyLensData
-    //% block="HuskyLens data x: %x y: %y isDetected: %isDetected"
+    //% block="HuskyLens data x: %x y: %y weight: %weight height: %height isDetected: %isDetected"
     //% weight=50
-    export function huskyLensData(x: number, y: number, isDetected: boolean): void{
-        _husky_lens_data(x, y, isDetected);
+    export function huskyLensData(x: number, y: number, weight: number, height: number, isDetected: boolean): void{
+        _husky_lens_data(x, y, weight, height, isDetected);
     }
 }

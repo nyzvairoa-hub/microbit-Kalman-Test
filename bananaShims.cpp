@@ -2,6 +2,8 @@
 #include "MicroBit.h"
 #include "nrf_gpio.h"
 #include "pxtbase.h"
+#include "KalmanFilterHeader.h"
+
 using namespace pxt;
 
 // --- CONSTANTS ---
@@ -28,20 +30,24 @@ namespace i2cHusky{
 // --- NAMESPACE START ---
 namespace banana {
 
-    // --- GLOBAL VARIABLES ---
+    // --- GLOBAL VARIABLES --- 
     static bool banana_loop_bool = false; 
     static int globalSpeed[4] = {0,0,0,0} ;
     static int globalDir[4] = {0,0,0,0} ;
     static int globalChannel[4] = {4,6,10,8};
 
-    // --- Variable for sensor ---//
+    // --- Kalman Filter Initiation ---
+    static PVKalman filterX(10.0, 0.1);
+    static PVKalman filterWth(10.0, 0.1);
+
+    // --- Variable for sensor --- 
     static int sensorX = 0;
     static int sensorY = 0;
     static int width = 0;
     static int height = 0;
     static bool objectDectected = false;
 
-    // --- 1. HELPER FUNCTIONS ---
+    // --- 1. HELPER FUNCTIONS --- 
 
     void i2cWrite(uint8_t reg, uint8_t value){
         uint8_t buff[2];
@@ -148,10 +154,28 @@ namespace banana {
     // --- 2. FIBER LOOP ---
     void banana_loop(){
         while(banana_loop_bool){
+            float dt = 0.01; // Assuming loop runs every 10ms
+
+            // perdict
+            filterX.predict(dt);
+            filterWth.predict(dt);
+
+            // correction phase
+            if(objectDectected){
+                filterX.update((float)sensorX);
+                filterWth.update((float)width);
+            }
+
+            // clean data
+            int smoothX = (int)filterX.x;
+            int smoothWth = (int)filterWth.x;
+
+            uBit.serial.printf("X: %d, Wth: %d\r\n", smoothX, smoothWth);
+
             for(int i = 0; i < 4; i++){
                 controlMotor(i);
             }
-            fiber_sleep(20);
+            fiber_sleep(10);
         }
     }
 
@@ -173,9 +197,11 @@ namespace banana {
     }
 
     //%
-    void husky_lens_data(int x, int y, bool isDetected){
+    void husky_lens_data(int x, int y, int width, int height, bool isDetected){
         sensorX = x;
         sensorY = y;
+        width = width;
+        height = height;
         objectDectected = isDetected;
 
         uBit.serial.printf("HuskyLens Data - X: %d, Y: %d, Detected: %d\r\n", sensorX, sensorY, objectDectected);
