@@ -4,17 +4,21 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*",
-        "Huskylens": "github:dfrobot/pxt-dfrobot_huskylens#v2.0.7"
+        "microphone": "*"
     },
     "files": [
+        "shims.d.ts",
+        "enums.d.ts",
         "banana.ts",
         "README.md",
         "bananaShims.cpp",
-        "main.ts"
+        "KalmanFilterHeader.h",
+        "main.ts",
+        "main.py"
     ],
     "testFiles": [
-        "test.ts"
+        "test.ts",
+        "main.blocks"
     ],
     "public": true,
     "targetVersions": {
