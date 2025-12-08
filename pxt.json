@@ -1,11 +1,10 @@
 {
-    "name": "Testing uBit - Copy #2",
+    "name": "KalmanTest",
     "description": "",
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*",
-        "Huskylens": "github:dfrobot/pxt-dfrobot_huskylens#v2.0.7"
+        "microphone": "*"
     },
     "files": [
         "shims.d.ts",
