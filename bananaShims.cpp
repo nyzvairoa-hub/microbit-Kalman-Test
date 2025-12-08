@@ -1,7 +1,5 @@
 #include "pxt.h" 
 #include "MicroBit.h"
-#include "nrf_gpio.h"
-#include "pxtbase.h"
 #include "KalmanFilterHeader.h"
 
 using namespace pxt;
@@ -124,12 +122,6 @@ namespace banana {
 
     void i2cInit(){
         scanI2C(); // Run scan first
-        
-        nrf_gpio_cfg(32, NRF_GPIO_PIN_DIR_INPUT,
-            NRF_GPIO_PIN_INPUT_CONNECT,
-            NRF_GPIO_PIN_PULLDOWN,
-            NRF_GPIO_PIN_S0D1,
-            NRF_GPIO_PIN_NOSENSE);
 
         // Give the bus a moment to settle after scanning
         uBit.sleep(50); 
@@ -170,7 +162,7 @@ namespace banana {
             for(int i = 0; i < 4; i++){
                 controlMotor(i);
             }
-            fiber_sleep(10);
+            uBit.sleep(10);
         }
     }
 
