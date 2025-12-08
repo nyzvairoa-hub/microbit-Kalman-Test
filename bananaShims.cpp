@@ -184,7 +184,7 @@ namespace banana {
     }
 
     //%
-    void husky_lens_data(int x, int y, int w, int h, bool isDetected){
+    void husky_lens_data(int x, int y, int _w, int _h, bool isDetected){
         sensorX = x;
         sensorY = y;
         width = w;
