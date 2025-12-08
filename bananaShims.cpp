@@ -1,8 +1,7 @@
 #include "pxt.h" 
 #include "MicroBit.h"
 #include "nrf_gpio.h"
-#include "pxtbase.h"
-#include "KalmanFilterHeader.h"
+#include <math.h>
 
 using namespace pxt;
 
@@ -16,49 +15,74 @@ using namespace pxt;
 #define FORWARD 1
 #define BACKWARD 2
 
+// --- KALMAN CLASS (Directly Embedded) ---
+class PVKalman {
+    public:
+        float x, v;       // State
+        float p_xx, p_vv; // Covariance
+        float q_pos, q_vel, r_measure; // Tuning
+
+        PVKalman(float measurement_noise, float process_noise){
+            x = 0; v = 0;
+            p_xx = 100.0; p_vv = 100.0;
+            r_measure = measurement_noise;
+            q_pos = process_noise; q_vel = process_noise;
+        }
+
+        void predict(float dt){
+            x += v * dt;
+            p_xx += dt * dt * p_vv + q_pos;
+            p_vv += q_vel;
+        }
+
+        void update(float measurement){
+            float k_x = p_xx / (p_xx + r_measure);
+            float k_v = p_vv / (p_vv + r_measure);
+            
+            float inno = measurement - x;
+            x = x + k_x * inno;
+            v = v + k_v * inno;
+
+            p_xx = (1.0 - k_x) * p_xx;
+            p_vv = (1.0 - k_v) * p_vv;
+        }
+};
+
 // --- NAMESPACE START ---
 namespace banana {
 
     // --- GLOBAL VARIABLES --- 
     static bool banana_loop_bool = false; 
-    static int globalSpeed[4] = {0,0,0,0} ;
-    static int globalDir[4] = {0,0,0,0} ;
+    static int globalSpeed[4] = {0,0,0,0};
+    static int globalDir[4] = {0,0,0,0};
     static int globalChannel[4] = {4,6,10,8};
 
-    // --- Kalman Filter Initiation ---
+    // --- Kalman Filter Instances ---
     static PVKalman filterX(10.0, 0.1);
-    static PVKalman filterWth(10.0, 0.1);
+    static PVKalman filterWth(10.0, 0.2); 
 
-    // --- Variable for sensor --- 
+    // --- Sensor Variables --- 
     static int sensorX = 0;
     static int sensorY = 0;
-    static int width = 0;
-    static int height = 0;
-    static bool objectDectected = false;
+    static int sensorW = 0; // Renamed to avoid confusion
+    static int sensorH = 0;
+    static bool objectDetected = false; 
 
-    // --- 1. HELPER FUNCTIONS --- 
-
+    // --- HELPER FUNCTIONS --- 
     void i2cWrite(uint8_t reg, uint8_t value){
         uint8_t buff[2];
-        buff[0] = reg;
-        buff[1] = value;
+        buff[0] = reg; buff[1] = value;
         
         #if MICROBIT_CODAL
-            int res = uBit.i2c.write(PCA9685_ADDRESS, buff, 2, false);
+            uBit.i2c.write(PCA9685_ADDRESS, buff, 2, false);
         #else
-            int res = uBit.i2c.write(PCA9685_ADDRESS, (char*)buff, 2, false);
+            uBit.i2c.write(PCA9685_ADDRESS, (char*)buff, 2, false);
         #endif
-        
-        if (res != 0) {
-            uBit.serial.printf("I2C Write Error: %d at reg %d\r\n", res, reg);
-        }
     }
 
     void i2cWrite16x2(uint8_t reg, int value){
         uint8_t buff[3];
-        buff[0] = reg;
-        buff[1] = value & 0xFF; 
-        buff[2] = (value >> 8) & 0xFF; 
+        buff[0] = reg; buff[1] = value & 0xFF; buff[2] = (value >> 8) & 0xFF; 
         
         #if MICROBIT_CODAL
             uBit.i2c.write(PCA9685_ADDRESS, buff, 3, false);
@@ -74,7 +98,6 @@ namespace banana {
     }
 
     void controlMotor(int motorID){
-
         int speed = globalSpeed[motorID];
         int dir = globalDir[motorID];
         int channel = globalChannel[motorID];
@@ -86,100 +109,66 @@ namespace banana {
         if(dir == FORWARD){
             set_pwm(channel, 0, duty_cycle);
             set_pwm(channel + 1, 0, 0);
-            //uBit.serial.printf("M1: FWD %d\r\n", speed);
         } else if(dir == BACKWARD){
             set_pwm(channel, 0, 0);
             set_pwm(channel + 1, 0, duty_cycle);
-            //uBit.serial.printf("M1: REV %d\r\n", speed);
         } else{
             set_pwm(channel, 0, 0);
             set_pwm(channel + 1, 0, 0);
-            //uBit.serial.printf("M1: STOP\r\n");
         }
-    }
-
-    // --- REFINED SCANNER ---
-    void scanI2C() {
-        uBit.serial.printf("\r\n--- STARTING I2C SCAN ---\r\n");
-        int devices_found = 0;
-        
-        // Scan standard 7-bit addresses
-        for (int i = 8; i < 120; i++) {
-            uint8_t dummy = 0;
-            #if MICROBIT_CODAL
-                int res = uBit.i2c.write(i << 1, &dummy, 0, false); 
-            #else
-                int res = uBit.i2c.write(i << 1, (char*)&dummy, 0, false);
-            #endif
-            
-            if (res == 0) {
-                uBit.serial.printf("DEVICE FOUND AT: 0x%x (%d)\r\n", i, i);
-                devices_found++;
-                uBit.sleep(10); 
-            }
-        }
-        uBit.serial.printf("Scan Complete. Found %d devices.\r\n", devices_found);
-        uBit.serial.printf("-------------------------\r\n");
     }
 
     void i2cInit(){
-        scanI2C(); // Run scan first
-        
-        nrf_gpio_cfg(32, NRF_GPIO_PIN_DIR_INPUT,
-            NRF_GPIO_PIN_INPUT_CONNECT,
-            NRF_GPIO_PIN_PULLDOWN,
-            NRF_GPIO_PIN_S0D1,
-            NRF_GPIO_PIN_NOSENSE);
-
-        // Give the bus a moment to settle after scanning
+        // Pin configuration for I2C
+        nrf_gpio_cfg(32, NRF_GPIO_PIN_DIR_INPUT, NRF_GPIO_PIN_INPUT_CONNECT,
+                    NRF_GPIO_PIN_PULLDOWN, NRF_GPIO_PIN_S0D1, NRF_GPIO_PIN_NOSENSE);
         uBit.sleep(50); 
-
-        // Try initialization sequence
-        i2cWrite(PCA9685_MODE1, 0x00);
-        uBit.sleep(10);
-        i2cWrite(PCA9685_MODE1, 0x10); 
-        uBit.sleep(5);
+        i2cWrite(PCA9685_MODE1, 0x00); uBit.sleep(10);
+        i2cWrite(PCA9685_MODE1, 0x10); uBit.sleep(5);
         i2cWrite(PCA9685_PRESCALE, 0x79); 
-        i2cWrite(PCA9685_MODE1, 0x00); 
-        uBit.sleep(5);
-        i2cWrite(PCA9685_MODE1, 0xa0); 
-        uBit.sleep(5);
+        i2cWrite(PCA9685_MODE1, 0x00); uBit.sleep(5);
+        i2cWrite(PCA9685_MODE1, 0xa0); uBit.sleep(5);
     }
 
-    // --- 2. FIBER LOOP ---
+    // --- MAIN LOOP ---
     void banana_loop(){
         while(banana_loop_bool){
-            float dt = 0.01; // Assuming loop runs every 10ms
+            float dt = 0.01; 
 
-            // perdict
+            // Predict
             filterX.predict(dt);
             filterWth.predict(dt);
 
-            // correction phase
-            if(objectDectected){
+            // Correct
+            if(objectDetected){
                 filterX.update((float)sensorX);
-                filterWth.update((float)width);
+                filterWth.update((float)sensorW);
             }
 
-            // clean data
+            // Clean Data
             int smoothX = (int)filterX.x;
-            int smoothWth = (int)filterWth.x;
+            int smoothW = (int)filterWth.x;
 
-            uBit.serial.printf("X: %d, Wth: %d\r\n", smoothX, smoothWth);
+            // Optional Debug
+            // uBit.serial.printf("X: %d, W: %d\r\n", smoothX, smoothW);
 
             for(int i = 0; i < 4; i++){
                 controlMotor(i);
             }
-            fiber_sleep(10);
+            
+            // Critical Yield
+            uBit.sleep(10);
         }
     }
 
+    // --- EXPORTS ---
+
     //%
     void banana_init(){
-     if(!banana_loop_bool){
-        i2cInit();
-        banana_loop_bool = true;
-        create_fiber(banana_loop);
+        if(!banana_loop_bool){
+            i2cInit();
+            banana_loop_bool = true;
+            create_fiber(banana_loop);
         }
     }
 
@@ -192,14 +181,12 @@ namespace banana {
     }
 
     //%
-    void husky_lens_data(int x, int y, int w, int h, bool isDetected){
+    // FIXED ARGUMENT NAMES to prevent "Assertion Failed"
+    void husky_lens_data(int x, int y, int _w, int _h, bool isDetected){
         sensorX = x;
         sensorY = y;
-        width = w;
-        height = h;
-        objectDectected = isDetected;
-
-        uBit.serial.printf("HuskyLens Data - X: %d, Y: %d, Detected: %d\r\n", sensorX, sensorY, objectDectected);
+        sensorW = _w;
+        sensorH = _h;
+        objectDetected = isDetected;
     }
-
-} 
+}

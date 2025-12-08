@@ -7,18 +7,13 @@
         "microphone": "*"
     },
     "files": [
-        "shims.d.ts",
-        "enums.d.ts",
         "banana.ts",
         "README.md",
         "bananaShims.cpp",
-        "KalmanFilterHeader.h",
-        "main.ts",
-        "main.py"
+        "main.ts"
     ],
     "testFiles": [
-        "test.ts",
-        "main.blocks"
+        "test.ts"
     ],
     "public": true,
     "targetVersions": {
@@ -28,5 +23,5 @@
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }
