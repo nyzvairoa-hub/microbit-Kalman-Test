@@ -187,8 +187,8 @@ namespace banana {
     void husky_lens_data(int x, int y, int _w, int _h, bool isDetected){
         sensorX = x;
         sensorY = y;
-        width = w;
-        height = h;
+        width = _w;
+        height = _h;
         objectDectected = isDetected;
 
         uBit.serial.printf("HuskyLens Data - X: %d, Y: %d, Detected: %d\r\n", sensorX, sensorY, objectDectected);
