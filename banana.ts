@@ -46,7 +46,7 @@ namespace banana {
     }
     
     //% blockID:banana_HuskyLensData
-    //% block="HuskyLens data x: %x y: %y weight: %weight height: %height isDetected: %isDetected"
+    //% block="HuskyLens data x: %x y: %y width: %width height: %height isDetected: %isDetected"
     //% weight=50
     export function huskyLensData(x: number, y: number, width: number, height: number, isDetected: boolean): void{
         _husky_lens_data(x, y, width, height, isDetected);
