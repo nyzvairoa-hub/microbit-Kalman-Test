@@ -16,17 +16,6 @@ using namespace pxt;
 #define FORWARD 1
 #define BACKWARD 2
 
-namespace i2cHusky{
-    void init(){
-        nrf_gpio_cfg(32, NRF_GPIO_PIN_DIR_INPUT,
-                    NRF_GPIO_PIN_INPUT_CONNECT,
-                    NRF_GPIO_PIN_PULLDOWN,
-                    NRF_GPIO_PIN_S0D1,
-                    NRF_GPIO_PIN_NOSENSE);
-    }
-}
-
-
 // --- NAMESPACE START ---
 namespace banana {
 
@@ -136,6 +125,12 @@ namespace banana {
     void i2cInit(){
         scanI2C(); // Run scan first
         
+        nrf_gpio_cfg(32, NRF_GPIO_PIN_DIR_INPUT,
+            NRF_GPIO_PIN_INPUT_CONNECT,
+            NRF_GPIO_PIN_PULLDOWN,
+            NRF_GPIO_PIN_S0D1,
+            NRF_GPIO_PIN_NOSENSE);
+
         // Give the bus a moment to settle after scanning
         uBit.sleep(50); 
 
@@ -197,11 +192,11 @@ namespace banana {
     }
 
     //%
-    void husky_lens_data(int x, int y, int width, int height, bool isDetected){
+    void husky_lens_data(int x, int y, int w, int h, bool isDetected){
         sensorX = x;
         sensorY = y;
-        width = width;
-        height = height;
+        width = w;
+        height = h;
         objectDectected = isDetected;
 
         uBit.serial.printf("HuskyLens Data - X: %d, Y: %d, Detected: %d\r\n", sensorX, sensorY, objectDectected);

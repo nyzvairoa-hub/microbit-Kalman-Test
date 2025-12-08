@@ -1,6 +1,8 @@
 #ifndef PV_KALMAN_H
 #define PV_KALMAN_H
 
+#include <math.h>
+
 class PVKalman{
     public:
         // state variables
