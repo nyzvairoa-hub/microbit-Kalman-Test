@@ -1,20 +1,16 @@
 {
-    "name": "KalmanTest",
+    "name": "BananaBot",
     "description": "",
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*",
-        "Huskylens": "github:dfrobot/pxt-dfrobot_huskylens#v2.0.7"
+        "microphone": "*"
     },
     "files": [
-        "shims.d.ts",
-        "enums.d.ts",
         "banana.ts",
         "README.md",
         "bananaShims.cpp",
-        "main.ts",
-        "main.py"
+        "main.ts"
     ],
     "testFiles": [
         "test.ts"
@@ -27,5 +23,5 @@
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "tsprj"
+    "preferredEditor": "blocksprj"
 }
