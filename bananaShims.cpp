@@ -143,7 +143,7 @@ namespace banana {
         while(banana_loop_bool){
             float dt = 0.01; // Assuming loop runs every 10ms
 
-            uBit.serial.printf("X: %d, Wth: %d\r\n", sensorX, width);
+            uBit.serial.printf("Xraw: %d, Wthraw: %d\r\n", sensorX, width);
             // perdict
             filterX.predict(dt);
             filterWth.predict(dt);
