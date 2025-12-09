@@ -48,7 +48,7 @@ namespace banana {
         #endif
         
         if (res != 0) {
-            uBit.serial.printf("I2C Write Error: %d at reg %d\r\n", res, reg);
+            //uBit.serial.printf("I2C Write Error: %d at reg %d\r\n", res, reg);
         }
     }
 
@@ -157,7 +157,7 @@ namespace banana {
             int smoothX = (int)filterX.x;
             int smoothWth = (int)filterWth.x;
 
-            uBit.serial.printf("X: %d, Wth: %d\r\n", smoothX, smoothWth);
+            //uBit.serial.printf("X: %d, Wth: %d\r\n", smoothX, smoothWth);
 
             for(int i = 0; i < 4; i++){
                 controlMotor(i);
