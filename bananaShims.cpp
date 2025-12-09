@@ -143,6 +143,7 @@ namespace banana {
         while(banana_loop_bool){
             float dt = 0.01; // Assuming loop runs every 10ms
 
+            uBit.serial.printf("X: %d, Wth: %d\r\n", sensorX, width);
             // perdict
             filterX.predict(dt);
             filterWth.predict(dt);
@@ -157,7 +158,7 @@ namespace banana {
             int smoothX = (int)filterX.x;
             int smoothWth = (int)filterWth.x;
 
-            //uBit.serial.printf("X: %d, Wth: %d\r\n", smoothX, smoothWth);
+            uBit.serial.printf("X: %d, Wth: %d\r\n", smoothX, smoothWth);
 
             for(int i = 0; i < 4; i++){
                 controlMotor(i);
