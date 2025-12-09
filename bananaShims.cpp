@@ -184,14 +184,15 @@ namespace banana {
     }
 
     //%
-    void husky_lens_data(int x, int y, int _w, int _h, bool isDetected){
+    void husky_pos(int x, int y){
         sensorX = x;
         sensorY = y;
-        width = _w;
-        height = _h;
-        objectDectected = isDetected;
-
-        uBit.serial.printf("HuskyLens Data - X: %d, Y: %d, Detected: %d\r\n", sensorX, sensorY, objectDectected);
     }
 
+    //%
+    void husky_size(int _w, int _h, bool _b){
+        width = _w;
+        height = _h;
+        objectDectected = _b;
+    }
 } 
