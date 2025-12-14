@@ -140,6 +140,9 @@ namespace banana {
 
     // --- 2. FIBER LOOP ---
     void banana_loop(){
+        int lostCount = 0;
+        const int MAX_LOST_LOOP = 50;
+
         while(banana_loop_bool){
             float dt = 0.01; // Assuming loop runs every 10ms
 
@@ -152,13 +155,22 @@ namespace banana {
             if(objectDectected){
                 filterX.update((float)sensorX);
                 filterWth.update((float)width);
+                lostCount = 0;
+            } else {
+                lostCount++;
+                if(lostCount > MAX_LOST_LOOP){
+                    filterX.v = 0;
+                    filterWth.v = 0;
+                }
             }
 
             // clean data
-            int smoothX = (int)filterX.x;
-            int smoothWth = (int)filterWth.x;
+            int smoothXCoor = (int)filterX.x;
+            int smoothWthCoor = (int)filterWth.x;
+            int smoothXVel = (int)filterX.v;
+            int smoothWthVel = (int)filterWth.v;
 
-            uBit.serial.printf("X: %d, Wth: %d\r\n", smoothX, smoothWth);
+            uBit.serial.printf("X: %d, Wth: %d\r\n", smoothXCoor, smoothWthCoor);
 
             for(int i = 0; i < 4; i++){
                 controlMotor(i);
