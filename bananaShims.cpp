@@ -191,8 +191,8 @@ namespace banana {
                     int turnOutput = (int)(KP_TURN * errorTurn);
                     int driveOutput = (int)(KP_DIST * errorDist);
 
-                    int leftSpeed = driveOutput - turnOutput;
-                    int rightSpeed = driveOutput + turnOutput;
+                    int leftSpeed = driveOutput + turnOutput;
+                    int rightSpeed = driveOutput - turnOutput;
 
                     motorSpeed[0] = leftSpeed;
                     motorSpeed[1] = leftSpeed;
