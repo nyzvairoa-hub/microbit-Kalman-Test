@@ -188,8 +188,8 @@ namespace banana {
                     if (abs(errorTurn) < DEAD_TURN) errorTurn = 0;
                     if (abs(errorDist) < DEAD_DIST) errorDist = 0;
 
-                    int turnOutput = (int)(KP_TURN * errorTurn);
-                    int driveOutput = (int)(KP_DIST * errorDist);
+                    int -turnOutput = (int)(KP_TURN * errorTurn);
+                    int -driveOutput = (int)(KP_DIST * errorDist);
 
                     int leftSpeed = -driveOutput + turnOutput;
                     int rightSpeed = -driveOutput - turnOutput;
