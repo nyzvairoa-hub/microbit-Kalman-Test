@@ -19,8 +19,8 @@ namespace banana {
 
     // --- GLOBAL VARIABLES --- 
     static bool banana_loop_bool = false; 
-    static int globalSpeed[4] = {0,0,0,0} ;
-    static int globalDir[4] = {0,0,0,0} ;
+    static bool isAutoMode = true;
+    static int motorSpeed[4] = {0,0,0,0};
     static int globalChannel[4] = {4,6,10,8};
 
     // --- Kalman Filter Initiation ---
@@ -34,6 +34,14 @@ namespace banana {
     static int height = 0;
     static bool objectDectected = false;
 
+    const int TARGET_X = 160;
+    const int TARGET_WTH = 100;
+    static float KP_TURN = 0.8;
+    static float KP_DIST = 1.5;
+
+    const int DEAD_TURN = 10;
+    const int DEAD_DIST = 5;
+
     // --- 1. HELPER FUNCTIONS --- 
 
     void i2cWrite(uint8_t reg, uint8_t value){
@@ -46,10 +54,6 @@ namespace banana {
         #else
             int res = uBit.i2c.write(PCA9685_ADDRESS, (char*)buff, 2, false);
         #endif
-        
-        if (res != 0) {
-            //uBit.serial.printf("I2C Write Error: %d at reg %d\r\n", res, reg);
-        }
     }
 
     void i2cWrite16x2(uint8_t reg, int value){
@@ -71,28 +75,35 @@ namespace banana {
         i2cWrite16x2(reg + 2, offValue);
     }
 
-    void controlMotor(int motorID){
-
-        int speed = globalSpeed[motorID];
-        int dir = globalDir[motorID];
+    void controlMotorSign(int motorID,int speedVal){
+        int dir = STOP;
+        int duty = 0;
         int channel = globalChannel[motorID];
 
-        int duty_cycle = (speed * 4095) / 255;
-        if(duty_cycle < 0) duty_cycle = 0;
-        if(duty_cycle > 4095) duty_cycle = 4095;
+        if(speedVal > 0){
+            dir = FORWARD;
+            duty = speedVal;
+        } else if(speedVal < 0){
+            dir = BACKWARD;
+            duty = -speedVal;
+        } else{
+            dir = STOP;
+            duty = 0;
+        }
+
+        if (duty > 255) duty = 255;
+
+        int pwmVal = (duty * 4095) / 255;
 
         if(dir == FORWARD){
-            set_pwm(channel, 0, duty_cycle);
+            set_pwm(channel, 0, pwmVal);
             set_pwm(channel + 1, 0, 0);
-            //uBit.serial.printf("M1: FWD %d\r\n", speed);
         } else if(dir == BACKWARD){
             set_pwm(channel, 0, 0);
-            set_pwm(channel + 1, 0, duty_cycle);
-            //uBit.serial.printf("M1: REV %d\r\n", speed);
+            set_pwm(channel + 1, 0, pwmVal);
         } else{
             set_pwm(channel, 0, 0);
             set_pwm(channel + 1, 0, 0);
-            //uBit.serial.printf("M1: STOP\r\n");
         }
     }
 
@@ -164,16 +175,35 @@ namespace banana {
                 }
             }
 
-            // clean data
-            int smoothXCoor = (int)filterX.x;
-            int smoothWthCoor = (int)filterWth.x;
-            int smoothXVel = (int)filterX.v;
-            int smoothWthVel = (int)filterWth.v;
+            if(isAutoMode){
+                if(lostCount > MAX_LOST_LOOP){
+                    for(int i = 0; i < 4; i++){ motorSpeed[i] = 0; }
+                }else{
+                    int smoothXCoor = (int)filterX.x;
+                    int smoothWthCoor = (int)filterWth.x;
 
-            uBit.serial.printf("X: %d, Wth: %d\r\n", smoothXCoor, smoothWthCoor);
+                    int errorTurn = smoothXCoor - TARGET_X;
+                    int errorDist = TARGET_WTH - smoothWthCoor;
+
+                    if (abs(errorTurn) < DEAD_TURN) errorTurn = 0;
+                    if (abs(errorDist) < DEAD_DIST) errorDist = 0;
+
+                    int turnOutput = (int)(KP_TURN * errorTurn);
+                    int driveOutput = (int)(KP_DIST * errorDist);
+
+                    int leftSpeed = -driveOutput + turnOutput;
+                    int rightSpeed = -driveOutput - turnOutput;
+
+                    motorSpeed[0] = leftSpeed;
+                    motorSpeed[1] = leftSpeed;
+                    motorSpeed[2] = rightSpeed;
+                    motorSpeed[3] = rightSpeed;
+                }
+            }
+            //uBit.serial.printf("X: %d, Wth: %d\r\n", smoothXCoor, smoothWthCoor);
 
             for(int i = 0; i < 4; i++){
-                controlMotor(i);
+                controlMotorSign(i, motorSpeed[i]);
             }
             uBit.sleep(10);
         }
@@ -189,10 +219,10 @@ namespace banana {
     }
 
     //%
-    void banana_set_motor(int motorID, int speed, int dir){
+    void banana_set_motor(int motorID, int speed){
         if(motorID >= 0 && motorID < 4){
-            globalSpeed[motorID] = speed;
-            globalDir[motorID] = dir;
+            isAutoMode = false;
+            motorSpeed[motorID] = speed;
         }
     }
 
@@ -207,5 +237,16 @@ namespace banana {
         width = _w;
         height = _h;
         objectDectected = _b;
+    }
+
+    //%
+    void pid_value(float _kp_turn, float _kp_dist){
+        KP_TURN = _kp_turn;
+        KP_DIST = _kp_dist;
+    }
+
+    //%
+    void set_auto_mode(bool enabled){
+        isAutoMode = enabled;
     }
 } 

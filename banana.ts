@@ -6,13 +6,6 @@ enum bananaMotor{
     M4 = 3
 }
 
-enum bananDir{
-    //% block="Forward"
-    FORWARD = 1,
-    //% block="Backward"
-    BACKWARD = 2
-}
-
 // Icon unicode characters can be found at: http://fontawesome.io/icons/
 //% color=#c2b711 weight=100 icon="\uf1ec" block="Robot Smooth" advanced=false
 namespace banana {
@@ -21,13 +14,19 @@ namespace banana {
     function _init(): void { return; }
 
     //% shim=banana::banana_set_motor
-    function _set_motor(id: number, speed: number, dir: number): void { return; }
+    function _set_motor(id: number, speed: number): void { return; }
 
     //% shim=banana::husky_pos
     function _husky_pos(x: number, y: number): void { return; }
 
     //% shim=banana::husky_size
     function _husky_size(width: number, height: number, isDetected: boolean): void { return; }
+
+    //% shim=banana::pid_value
+    function _pid_value(KPTurn: number, KPDist: number): void { return; }
+
+    //% shim=banana::set_auto_mode
+    function _set_auto_mode(EnableAuto: boolean): void { return; }
 
     //% blockId=banana_StartMotor
     //% block="start motor"
@@ -36,16 +35,16 @@ namespace banana {
     }
 
     //% blockId=banana_Run
-    //% block="run motor %motor with speed %speed and direction %dir"
-    //% speed.min=0 speed.max=255 speed.defl=100
-    export function bananaRun(motor: bananaMotor, speed: number, dir: bananDir): void{
-        _set_motor(motor, speed, dir);
+    //% block="run motor %motor with speed %speed"
+    //% speed.min=-255 speed.max=255 speed.defl=0
+    export function bananaRun(motor: bananaMotor, speed: number): void{
+        _set_motor(motor, speed);
     }
 
     //% blockId=banana_Stop
     //% block="stop motor %motor"
     export function bananaStop(motor: bananaMotor): void{
-        _set_motor(motor, 0, 0);
+        _set_motor(motor, 0);
     }
     
     //% blockID:banana_HuskyLensData
@@ -54,5 +53,19 @@ namespace banana {
     export function huskyLensData(x: number, y: number, width: number, height: number, isDetected: boolean): void{
         _husky_pos(x, y);
         _husky_size(width, height, isDetected);
+    }
+
+    //% blockID:banana_PIDValue
+    //% block="set PID values KPTurn: %KPTurn KPDist: %KPDist"
+    //% weight=50
+    export function pidValue(KPTurn: number, KPDist: number): void{
+        _pid_value(KPTurn, KPDist);
+    }
+
+    //% blockID:banana_SetAutoMode
+    //% block="set tracking mode %enable"
+    //% enable.shadow=toggleOnOff
+    export function setAutoMode(EnableAuto: boolean): void{
+        _set_auto_mode(EnableAuto);
     }
 }
