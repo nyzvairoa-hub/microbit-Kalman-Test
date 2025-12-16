@@ -36,13 +36,18 @@ namespace banana {
 
     const int TARGET_X = 160;
     const int TARGET_WTH = 100;
-    static float KP_TURN = 0.8;
+    static float KP_TURN = 0.4;
     static float KP_DIST = 1.5;
 
     const int DEAD_TURN = 10;
     const int DEAD_DIST = 5;
 
     const int MAX_TURN_SPEED = 150;
+    const int MIN_DRIVE_SPEED = 50;
+
+    // Fuzzy Logic Parameters
+    static float minE = 20.0;
+    static float maxE = 120.0;
 
     // --- 1. HELPER FUNCTIONS --- 
 
@@ -151,6 +156,10 @@ namespace banana {
         uBit.sleep(5);
     }
 
+    float map_float(float x, float in_min, float in_max, float out_min, float out_max) {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
     // --- 2. FIBER LOOP ---
     void banana_loop(){
         int lostCount = 0;
@@ -161,13 +170,11 @@ namespace banana {
 
             //uBit.serial.printf("Xraw: %d, Wthraw: %d\r\n", sensorX, width);
             // perdict
-            filterX.predict(dt);
-            filterWth.predict(dt);
+            filterX.predict(dt); filterWth.predict(dt);
 
             // correction phase
             if(objectDectected){
-                filterX.update((float)sensorX);
-                filterWth.update((float)width);
+                filterX.update((float)sensorX); filterWth.update((float)width);
                 lostCount = 0;
             } else {
                 lostCount++;
@@ -190,8 +197,28 @@ namespace banana {
                     if (abs(errorTurn) < DEAD_TURN) errorTurn = 0;
                     if (abs(errorDist) < DEAD_DIST) errorDist = 0;
 
-                    int turnOutput = (int)(KP_TURN * errorTurn);
-                    int driveOutput = (int)(KP_DIST * errorDist);
+                    float absError = (float)abs(errorTurn);
+                    float dynamic_kp_turn = KP_TURN;
+                    float dynamic_kp_dist = KP_DIST;
+
+                    if(absError < minE){
+                        dynamic_kp_turn = KP_TURN;
+                        dynamic_kp_dist = KP_DIST;
+                    } else if(absError > maxE){
+                        dynamic_kp_turn = KP_TURN + 0.4; 
+                        dynamic_kp_dist = KP_DIST - 1.0;
+                    } else {
+                        dynamic_kp_turn = map_float(absError, minE, maxE, KP_TURN, KP_TURN + 0.4);
+                        dynamic_kp_dist = map_float(absError, minE, maxE, KP_DIST, KP_DIST - 1.0);
+                    }
+
+                    int turnOutput = (int)(dynamic_kp_turn * errorTurn);
+                    int driveOutput = (int)(dynamic_kp_dist * errorDist);
+
+                    if(abs(driveOutput)>0 && abs(driveOutput) < MIN_DRIVE_SPEED){
+                        if(driveOutput > 0) driveOutput = MIN_DRIVE_SPEED;
+                        else driveOutput = -MIN_DRIVE_SPEED;
+                    }
 
                     if(turnOutput > MAX_TURN_SPEED) turnOutput = MAX_TURN_SPEED;
                     if(turnOutput < -MAX_TURN_SPEED) turnOutput = -MAX_TURN_SPEED;
@@ -200,9 +227,9 @@ namespace banana {
                     int rightSpeed = driveOutput - turnOutput;
 
                     motorSpeed[0] = leftSpeed;
-                    motorSpeed[1] = leftSpeed;
+                    //motorSpeed[1] = leftSpeed;
                     motorSpeed[2] = rightSpeed;
-                    motorSpeed[3] = rightSpeed;
+                    //motorSpeed[3] = rightSpeed;
                 }
             }
             //uBit.serial.printf("X: %d, Wth: %d\r\n", smoothXCoor, smoothWthCoor);
