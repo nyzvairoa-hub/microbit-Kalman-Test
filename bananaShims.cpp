@@ -42,6 +42,8 @@ namespace banana {
     const int DEAD_TURN = 10;
     const int DEAD_DIST = 5;
 
+    const int MAX_TURN_SPEED = 150;
+
     // --- 1. HELPER FUNCTIONS --- 
 
     void i2cWrite(uint8_t reg, uint8_t value){
@@ -190,6 +192,9 @@ namespace banana {
 
                     int turnOutput = (int)(KP_TURN * errorTurn);
                     int driveOutput = (int)(KP_DIST * errorDist);
+
+                    if(turnOutput > MAX_TURN_SPEED) turnOutput = MAX_TURN_SPEED;
+                    if(turnOutput < -MAX_TURN_SPEED) turnOutput = -MAX_TURN_SPEED;
 
                     int leftSpeed = driveOutput + turnOutput;
                     int rightSpeed = driveOutput - turnOutput;
