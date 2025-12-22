@@ -221,10 +221,10 @@ namespace banana {
                         dynamic_kp_dist = KP_DIST;
                     } else if(absError > maxE){
                         dynamic_kp_turn = KP_TURN + 0.2; 
-                        dynamic_kp_dist = KP_DIST - 0.5;
+                        dynamic_kp_dist = KP_DIST - 1.5;
                     } else {
                         dynamic_kp_turn = map_float(absError, minE, maxE, KP_TURN, KP_TURN + 0.2);
-                        dynamic_kp_dist = map_float(absError, minE, maxE, KP_DIST, KP_DIST - 0.5);
+                        dynamic_kp_dist = map_float(absError, minE, maxE, KP_DIST, KP_DIST - 1.5);
                     }
 
                     // --- STEP B: APPLY DISTANCE SCALER (Car Intuition) ---
