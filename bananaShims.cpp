@@ -177,7 +177,7 @@ namespace banana {
             uint64_t now = uBit.systemTime();
             int dt_ms = (int)(now - lastTime);
             lastTime = now;
-            
+            uBit.serial.printf("%d\r\n", lastTime);
             // Kalman Predict
             float dt = 0.01; 
             filterX.predict(dt); filterWth.predict(dt);
