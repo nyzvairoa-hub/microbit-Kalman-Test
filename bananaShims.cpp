@@ -178,7 +178,7 @@ namespace banana {
             lastTime = now;
 
             // Send to Serial (View in MakeCode Console)
-            uBit.serial.printf("DT_CPP:%d\n", dt_ms);
+            //uBit.serial.printf("DT_CPP:%d\n", dt_ms);
 
             // Run Kalman Filter
             float dt = 0.01; // Assuming loop runs every 10ms
