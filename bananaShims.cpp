@@ -49,6 +49,12 @@ namespace banana {
     static float minE = 20.0;
     static float maxE = 120.0;
 
+    // Your "Car Intuition" Limits
+    static float minWidth = 30.0;  // Far away (Limit you found)
+    static float maxWidth = 120.0; // Close up
+
+    uint64_t lastTime = uBit.systemTime();
+
     // --- 1. HELPER FUNCTIONS --- 
 
     void i2cWrite(uint8_t reg, uint8_t value){
@@ -166,6 +172,15 @@ namespace banana {
         const int MAX_LOST_LOOP = 50;
 
         while(banana_loop_bool){
+
+            uint64_t now = uBit.systemTime();
+            int dt_ms = (int)(now - lastTime);
+            lastTime = now;
+
+            // Send to Serial (View in MakeCode Console)
+            uBit.serial.printf("DT_CPP:%d\n", dt_ms);
+
+            // Run Kalman Filter
             float dt = 0.01; // Assuming loop runs every 10ms
 
             //uBit.serial.printf("Xraw: %d, Wthraw: %d\r\n", sensorX, width);
@@ -206,10 +221,28 @@ namespace banana {
                         dynamic_kp_dist = KP_DIST;
                     } else if(absError > maxE){
                         dynamic_kp_turn = KP_TURN + 0.2; 
-                        dynamic_kp_dist = KP_DIST - 1.0;
+                        dynamic_kp_dist = KP_DIST - 0.5;
                     } else {
                         dynamic_kp_turn = map_float(absError, minE, maxE, KP_TURN, KP_TURN + 0.2);
-                        dynamic_kp_dist = map_float(absError, minE, maxE, KP_DIST, KP_DIST - 1.0);
+                        dynamic_kp_dist = map_float(absError, minE, maxE, KP_DIST, KP_DIST - 0.5);
+                    }
+
+                    // --- STEP B: APPLY DISTANCE SCALER (Car Intuition) ---
+                    // "If it's far (Width 30), steer gentle. If it's close (Width 120), steer sharp."
+                    float dist_scaler = 1.0;
+                    float currentWidth = (float)smoothW;
+
+                    if (currentWidth <= minWidth) {
+                        // FAR AWAY: Reduce steering by 50% (0.5x)
+                        dist_scaler = 0.35;
+                    } 
+                    else if (currentWidth >= maxWidth) {
+                        // CLOSE UP: Boost steering by 20% (1.2x)
+                        dist_scaler = 1;
+                    } 
+                    else {
+                        // MIDDLE: Slide smoothly from 0.5 to 1.2
+                        dist_scaler = map_float(currentWidth, minWidth, maxWidth, 0.35, 1.0);
                     }
 
                     int turnOutput = (int)(dynamic_kp_turn * errorTurn);
