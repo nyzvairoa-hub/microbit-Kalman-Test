@@ -167,105 +167,108 @@ namespace banana {
     }
 
     // --- 2. FIBER LOOP ---
+// --- 2. FIBER LOOP ---
     void banana_loop(){
         int lostCount = 0;
         const int MAX_LOST_LOOP = 50;
 
         while(banana_loop_bool){
-
+            // Timekeeping
             uint64_t now = uBit.systemTime();
             int dt_ms = (int)(now - lastTime);
             lastTime = now;
-
-            // Send to Serial (View in MakeCode Console)
-            uBit.serial.printf("%d\n", dt_ms);
-
-            // Run Kalman Filter
-            float dt = 0.01; // Assuming loop runs every 10ms
-
-            //uBit.serial.printf("Xraw: %d, Wthraw: %d\r\n", sensorX, width);
-            // perdict
+            
+            // Kalman Predict
+            float dt = 0.01; 
             filterX.predict(dt); filterWth.predict(dt);
 
-            // correction phase
+            // Kalman Update
             if(objectDectected){
                 filterX.update((float)sensorX); filterWth.update((float)width);
                 lostCount = 0;
             } else {
                 lostCount++;
                 if(lostCount > MAX_LOST_LOOP){
-                    filterX.v = 0;
-                    filterWth.v = 0;
+                    filterX.v = 0; filterWth.v = 0;
                 }
             }
 
             if(isAutoMode){
                 if(lostCount > MAX_LOST_LOOP){
                     for(int i = 0; i < 4; i++){ motorSpeed[i] = 0; }
-                }else{
-                    int smoothXCoor = (int)filterX.x;
-                    int smoothWthCoor = (int)filterWth.x;
+                } else {
+                    int smoothX = (int)filterX.x;
+                    int smoothW = (int)filterWth.x;
 
-                    int errorTurn = smoothXCoor - TARGET_X;
-                    int errorDist = TARGET_WTH - smoothWthCoor;
+                    int errorTurn = smoothX - TARGET_X;
+                    int errorDist = TARGET_WTH - smoothW;
 
+                    // Deadbands
                     if (abs(errorTurn) < DEAD_TURN) errorTurn = 0;
                     if (abs(errorDist) < DEAD_DIST) errorDist = 0;
 
+                    // --- LOGIC FIX 1: Prevent Negative Drive Gain ---
                     float absError = (float)abs(errorTurn);
                     float dynamic_kp_turn = KP_TURN;
                     float dynamic_kp_dist = KP_DIST;
 
                     if(absError < minE){
+                        // Zone 1: Driving Straight
                         dynamic_kp_turn = KP_TURN;
                         dynamic_kp_dist = KP_DIST;
                     } else if(absError > maxE){
+                        // Zone 3: Hard Turn (Panic)
                         dynamic_kp_turn = KP_TURN + 0.2; 
-                        dynamic_kp_dist = KP_DIST - 1.5;
+                        // FIX: Multiply instead of Subtract. 
+                        // This keeps 20% of drive speed instead of stopping/reversing.
+                        dynamic_kp_dist = KP_DIST * 0.2; 
                     } else {
+                        // Zone 2: Sliding
                         dynamic_kp_turn = map_float(absError, minE, maxE, KP_TURN, KP_TURN + 0.2);
-                        dynamic_kp_dist = map_float(absError, minE, maxE, KP_DIST, KP_DIST - 1.5);
+                        // FIX: Map to 20% scaler
+                        dynamic_kp_dist = map_float(absError, minE, maxE, KP_DIST, KP_DIST * 0.2);
                     }
 
-                    // --- STEP B: APPLY DISTANCE SCALER (Car Intuition) ---
-                    // "If it's far (Width 30), steer gentle. If it's close (Width 120), steer sharp."
+                    // --- LOGIC FIX 2: Use the Distance Scaler ---
                     float dist_scaler = 1.0;
-                    float currentWidth = (float)smoothWthCoor;
+                    float currentWidth = (float)smoothW; // Use filtered width
 
                     if (currentWidth <= minWidth) {
-                        // FAR AWAY: Reduce steering by 50% (0.5x)
+                        // FAR AWAY: Steer Gentle
                         dist_scaler = 0.35;
-                    } 
-                    else if (currentWidth >= maxWidth) {
-                        // CLOSE UP: Boost steering by 20% (1.2x)
-                        dist_scaler = 1;
-                    } 
-                    else {
-                        // MIDDLE: Slide smoothly from 0.5 to 1.2
+                    } else if (currentWidth >= maxWidth) {
+                        // CLOSE UP: Steer Sharp
+                        dist_scaler = 1.0;
+                    } else {
+                        // MIDDLE
                         dist_scaler = map_float(currentWidth, minWidth, maxWidth, 0.35, 1.0);
                     }
 
-                    int turnOutput = (int)(dynamic_kp_turn * errorTurn);
+                    // FIX: Apply the scaler to the turn!
+                    int turnOutput = (int)(dynamic_kp_turn * dist_scaler * errorTurn);
                     int driveOutput = (int)(dynamic_kp_dist * errorDist);
 
-                    if(abs(driveOutput)>0 && abs(driveOutput) < MIN_DRIVE_SPEED){
+                    // Anti-Stall
+                    if(abs(driveOutput) > 0 && abs(driveOutput) < MIN_DRIVE_SPEED){
                         if(driveOutput > 0) driveOutput = MIN_DRIVE_SPEED;
                         else driveOutput = -MIN_DRIVE_SPEED;
                     }
 
+                    // Clamping
                     if(turnOutput > MAX_TURN_SPEED) turnOutput = MAX_TURN_SPEED;
                     if(turnOutput < -MAX_TURN_SPEED) turnOutput = -MAX_TURN_SPEED;
 
+                    // Mixing
                     int leftSpeed = driveOutput + turnOutput;
                     int rightSpeed = driveOutput - turnOutput;
 
+                    // FIX 3: Enable All Motors (Assuming 4WD)
                     motorSpeed[0] = leftSpeed;
-                    //motorSpeed[1] = leftSpeed;
+                    motorSpeed[1] = leftSpeed; // Uncommented
                     motorSpeed[2] = rightSpeed;
-                    //motorSpeed[3] = rightSpeed;
+                    motorSpeed[3] = rightSpeed; // Uncommented
                 }
             }
-            //uBit.serial.printf("X: %d, Wth: %d\r\n", smoothXCoor, smoothWthCoor);
 
             for(int i = 0; i < 4; i++){
                 controlMotorSign(i, motorSpeed[i]);
