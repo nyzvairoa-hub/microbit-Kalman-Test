@@ -170,7 +170,7 @@ namespace banana {
 // --- 2. FIBER LOOP ---
     void banana_loop(){
         int lostCount = 0;
-        const int MAX_LOST_LOOP = 50;
+        const int MAX_LOST_LOOP = 20;
 
         while(banana_loop_bool){
             // Timekeeping
@@ -235,7 +235,7 @@ namespace banana {
 
                     if (currentWidth <= minWidth) {
                         // FAR AWAY: Steer Gentle
-                        dist_scaler = 0.35;
+                        dist_scaler = 0.7;
                     } else if (currentWidth >= maxWidth) {
                         // CLOSE UP: Steer Sharp
                         dist_scaler = 1.0;
@@ -264,9 +264,9 @@ namespace banana {
 
                     // FIX 3: Enable All Motors (Assuming 4WD)
                     motorSpeed[0] = leftSpeed;
-                    motorSpeed[1] = leftSpeed; // Uncommented
+                    //motorSpeed[1] = leftSpeed; // Uncommented
                     motorSpeed[2] = rightSpeed;
-                    motorSpeed[3] = rightSpeed; // Uncommented
+                    //motorSpeed[3] = rightSpeed; // Uncommented
                 }
             }
 
