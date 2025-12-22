@@ -230,7 +230,7 @@ namespace banana {
                     // --- STEP B: APPLY DISTANCE SCALER (Car Intuition) ---
                     // "If it's far (Width 30), steer gentle. If it's close (Width 120), steer sharp."
                     float dist_scaler = 1.0;
-                    float currentWidth = (float)smoothW;
+                    float currentWidth = (float)smoothWthCoor;
 
                     if (currentWidth <= minWidth) {
                         // FAR AWAY: Reduce steering by 50% (0.5x)
