@@ -170,7 +170,7 @@ namespace banana {
 // --- 2. FIBER LOOP ---
     void banana_loop(){
         int lostCount = 0;
-        const int MAX_LOST_LOOP = 25;
+        const int MAX_LOST_LOOP = 15;
 
         while(banana_loop_bool){
             // Timekeeping
