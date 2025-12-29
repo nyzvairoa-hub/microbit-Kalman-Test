@@ -1,104 +1,71 @@
+
+enum bananaMotor{
+    M1 = 0,
+    M2 = 1,
+    M3 = 2,
+    M4 = 3
+}
+
 // Icon unicode characters can be found at: http://fontawesome.io/icons/
-//% color=#c2b711 weight=100 icon="\uf1ec" block="Banana Meeeeee" advanced=false
+//% color=#c2b711 weight=100 icon="\uf1ec" block="Robot Smooth" advanced=false
 namespace banana {
 
-    /**
-     * How many bananas?
-     *
-     * This function is fully implemented in TypeScript.
-     *
-     * @param n number of bananas
-     */
-    //% blockId=banana_bananas
-    //% block="how many bananas $n"
-    export function bananas(n: number): number {
-        return n;
+    //% shim=banana::banana_init
+    function _init(): void { return; }
+
+    //% shim=banana::banana_set_motor
+    function _set_motor(id: number, speed: number): void { return; }
+
+    //% shim=banana::husky_pos
+    function _husky_pos(x: number, y: number): void { return; }
+
+    //% shim=banana::husky_size
+    function _husky_size(width: number, height: number, isDetected: boolean): void { return; }
+
+    //% shim=banana::pid_value
+    function _pid_value(KPTurn: number, KPDist: number): void { return; }
+
+    //% shim=banana::set_auto_mode
+    function _set_auto_mode(EnableAuto: boolean): void { return; }
+
+    //% blockId=banana_StartMotor
+    //% block="start motor"
+    export function startMotor(): void{
+        _init();
     }
 
-    /**
-     * Add your bananas!
-     *
-     * This function is a shim and the micro:bit runs the C++ version.
-     *
-     * @param n number of bananas
-     */
-    //% blockId=banana_banana_add
-    //% block="add your bananas $n | + $m"
-    //% help=github:carlosperate/pxt-banana/docs/banana_add
-    //% shim=banana::banana_add
-    export function bananaAdd(n: number, m: number): number {
-        // This code runs in the simulator
-        return n + m;
+    //% blockId=banana_Run
+    //% block="run motor %motor with speed %speed"
+    //% speed.min=-255 speed.max=255 speed.defl=0
+    export function bananaRun(motor: bananaMotor, speed: number): void{
+        _set_motor(motor, speed);
     }
 
-      /**
-     * Minus your bananas!
-     *
-     * This function is a shim and the micro:bit runs the C++ version.
-     *
-     * @param n number of bananas
-     */
-    //% blockId=banana_banana_minus
-    //% block="minus your bananas $n | - $m"
-    //% help=github:carlosperate/pxt-banana/docs/banana_add
-    //% shim=banana::banana_minus
-    export function bananaMinus(n: number, m: number): number {
-        // This code runs in the simulator
-        return n - m;
-    }
-
-    /**
-     * Multiply your bananas by a predefined multiplier depending on the
-     * micro:bit version that runs this code!
-     *
-     * This function is a shim and the micro:bit runs the C++ version.
-     * The output of this function will depend on the version of the micro:bit
-     * that runs it, V1 or V2.
-     *
-     * @param n number of bananas
-     */
-    //% blockId=banana_banana_multiplier
-    //% block="multiply your bananas $n"
-    //% shim=banana::banana_mult
-    export function bananaMultiplier(n: number): number {
-        // The simulator cannot differentiate micro:bit versions
-        return 0;
-    }
-
-    /**
-     * Get your bananas! But this version only works on micro:bit V2.
-     *
-     * This function is a shim and the micro:bit runs the C++ version.
-     *
-     * @param n number of bananas
-     */
-    //% blockId=banana_banana_v2
-    //% block="how many bananas (V2 only) $n"
-    //% parts="v2"
-    //% shim=banana::bananas_v2_only
-    export function bananasV2Only(n: number): number{
-        // The simulator does not differentiate between board version
-        // so the TypeScript code will always run
-        return n;
+    //% blockId=banana_Stop
+    //% block="stop motor %motor"
+    export function bananaStop(motor: bananaMotor): void{
+        _set_motor(motor, 0);
     }
     
-    //% blockId=banana_banana_heavy_calc
-    //% block="Heavy Calculation"
-    //% help=github:carlosperate/pxt-banana/docs/bananaHeavyCalc
-    //% shim=banana::bananaHeavyCalc
-    export function bananaHeavyCalc(){
-        return n;
+    //% blockID:banana_HuskyLensData
+    //% block="HuskyLens data x: %x y: %y width: %width height: %height isDetected: %isDetected"
+    //% weight=50
+    export function huskyLensData(x: number, y: number, width: number, height: number, isDetected: boolean): void{
+        _husky_pos(x, y);
+        _husky_size(width, height, isDetected);
     }
-    
-    //% blockId=banana_heavy_ts
-    //% block="TypeScript Heavy Calculation start at %num"
-    export function heavyCalcTS(num: number): number {
-        let result = num;
-        // Run 10,000 squaring operations. This is slow in TypeScript.
-        for (let i = 0; i < 10000; i++) {
-            //result = result * result; (Prevent overflow by using addition)
-            result = result + i; 
-        }
-        return result;
+
+    //% blockID:banana_PIDValue
+    //% block="set PID values KPTurn: %KPTurn KPDist: %KPDist"
+    //% weight=50
+    export function pidValue(KPTurn: number, KPDist: number): void{
+        _pid_value(KPTurn, KPDist);
+    }
+
+    //% blockID:banana_SetAutoMode
+    //% block="set tracking mode %enable"
+    //% enable.shadow=toggleOnOff
+    export function setAutoMode(EnableAuto: boolean): void{
+        _set_auto_mode(EnableAuto);
     }
 }
