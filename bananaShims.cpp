@@ -258,7 +258,7 @@ namespace banana {
                     if(turnOutput > MAX_TURN_SPEED) turnOutput = MAX_TURN_SPEED;
                     if(turnOutput < -MAX_TURN_SPEED) turnOutput = -MAX_TURN_SPEED;
 
-                    driveOutput = 150; // Constant speed for testing
+                    driveOutput = 100; // Constant speed for testing
 
                     // Mixing
                     int leftSpeed = driveOutput + turnOutput;
