@@ -5,7 +5,8 @@
         "core": "*",
         "radio": "*",
         "microphone": "*",
-        "Huskylens": "github:dfrobot/pxt-dfrobot_huskylens#v2.0.7"
+        "Huskylens": "github:dfrobot/pxt-dfrobot_huskylens#v2.0.7",
+        "datalogger": "*"
     },
     "files": [
         "shims.d.ts",
