@@ -1,5 +1,5 @@
 {
-    "name": "RobotTest",
+    "name": "ExperimentRobotTest",
     "description": "",
     "dependencies": {
         "core": "*",
