@@ -15,8 +15,9 @@ input.onButtonPressed(Button.A, function () {
             true
             )
             datalogger.log(
-            datalogger.createCV("Target", 100),
-            datalogger.createCV("Actual", huskylens.readBox_s(Content3.width))
+            datalogger.createCV("Target", 160),
+            datalogger.createCV("Actual", huskylens.readBox_s(Content3.xCenter)),
+            datalogger.createCV("Time", dt_actual)
             )
         } else {
             banana.huskyLensData(
@@ -35,6 +36,12 @@ let lastTime = 0
 lastTime = control.millis()
 banana.startMotor()
 banana.setAutoMode(true)
-banana.pidValue(0.4, 2.5)
+banana.pidValue(
+0.4,
+2.5,
+0.001,
+0.001
+)
+banana.KalmanFilterValues(9, 1)
 huskylens.initI2c()
 huskylens.initMode(protocolAlgorithm.ALGORITHM_TAG_RECOGNITION)
