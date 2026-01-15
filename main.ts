@@ -14,11 +14,6 @@ input.onButtonPressed(Button.A, function () {
             huskylens.readBox_s(Content3.height),
             true
             )
-            datalogger.log(
-            datalogger.createCV("Target", 160),
-            datalogger.createCV("Actual", huskylens.readBox_s(Content3.xCenter)),
-            datalogger.createCV("Time", dt_actual)
-            )
         } else {
             banana.huskyLensData(
             0,
@@ -39,8 +34,8 @@ banana.setAutoMode(true)
 banana.pidValue(
 0.4,
 2.5,
-10,
-10
+0.5,
+0.5
 )
 banana.KalmanFilterValues(9, 1)
 huskylens.initI2c()
