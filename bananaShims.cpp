@@ -278,6 +278,8 @@ namespace banana {
                     int leftSpeed = driveOutput + turnOutput;
                     int rightSpeed = driveOutput - turnOutput;
 
+                    ubit.serial.printf("right: %d, left: %d, drive: %d, turn: %d\r\n", rightSpeed, leftSpeed, driveOutput, turnOutput);
+
                     // FIX 3: Enable All Motors (Assuming 4WD)
                     motorSpeed[0] = leftSpeed;
                     //motorSpeed[1] = leftSpeed; // Uncommented
