@@ -28,6 +28,9 @@ namespace banana {
     //% shim=banana::set_auto_mode
     function _set_auto_mode(EnableAuto: boolean): void { return; }
 
+    //% shim=banana::KalmanFilterValues
+    function _KalmanFilterValues(r_measure: number, q_measure: number): void { return; }
+
     //% blockId=banana_StartMotor
     //% block="start motor"
     export function startMotor(): void{
@@ -67,5 +70,11 @@ namespace banana {
     //% enable.shadow=toggleOnOff
     export function setAutoMode(EnableAuto: boolean): void{
         _set_auto_mode(EnableAuto);
+    }
+
+    //% blockID:banana_KalmanFilter
+    //% block="set Kalman Filter r_measure: %r_measure q_measure: %q_measure"
+    export function KalmanFilterValues(r_measure: number, q_measure: number): void{
+        _KalmanFilterValues(r_measure, q_measure);
     }
 }

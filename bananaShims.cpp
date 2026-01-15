@@ -23,9 +23,12 @@ namespace banana {
     static int motorSpeed[4] = {0,0,0,0};
     static int globalChannel[4] = {4,6,10,8};
 
+    static float r_measure = 0;
+    static float q_measure = 0;
+
     // --- Kalman Filter Initiation ---
-    static PVKalman filterX(10.0, 0.1);
-    static PVKalman filterWth(10.0, 0.1);
+    static PVKalman filterX(r_measure, q_measure);
+    static PVKalman filterWth(r_measure, q_measure);
 
     // --- Variable for sensor --- 
     static int sensorX = 0;
@@ -38,6 +41,8 @@ namespace banana {
     const int TARGET_WTH = 100;
     static float KP_TURN = 0.4;
     static float KP_DIST = 1.5;
+    static float KD_TURN = 0.5; 
+    static float KD_DIST = 0.5;
 
     const int DEAD_TURN = 10;
     const int DEAD_DIST = 5;
@@ -241,12 +246,21 @@ namespace banana {
                         dist_scaler = 1.0;
                     } else {
                         // MIDDLE
-                        dist_scaler = map_float(currentWidth, minWidth, maxWidth, 0.35, 1.0);
+                        dist_scaler = map_float(currentWidth, minWidth, maxWidth, 0.7, 1.0);
                     }
 
+                    float velocityTurn = filterX.v; 
+                    float velocityDist = filterWth.v;
+
+                    float turn_P = dynamic_kp_turn * errorTurn;
+                    float turn_D = KD_TURN * velocityTurn;
+
+                    float dist_P = dynamic_kp_dist * errorDist;
+                    float dist_D = KD_DIST * velocityDist;
+
                     // FIX: Apply the scaler to the turn!
-                    int turnOutput = (int)(dynamic_kp_turn * dist_scaler * errorTurn);
-                    int driveOutput = (int)(dynamic_kp_dist * errorDist);
+                    int turnOutput = (int)((turn_P - turn_D) * dist_scaler);
+                    int driveOutput = (int)(dist_P - dist_D);
 
                     // Anti-Stall
                     if(abs(driveOutput) > 0 && abs(driveOutput) < MIN_DRIVE_SPEED){
@@ -318,5 +332,11 @@ namespace banana {
     //%
     void set_auto_mode(bool enabled){
         isAutoMode = enabled;
+    }
+
+    //%
+    void KalmanFilterValues(float r_meas, float q_meas){
+        r_measure = r_meas;
+        q_measure = q_meas;
     }
 } 
