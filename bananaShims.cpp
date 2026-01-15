@@ -175,7 +175,7 @@ namespace banana {
 // --- 2. FIBER LOOP ---
     void banana_loop(){
         int lostCount = 0;
-        const int MAX_LOST_LOOP = 15;
+        const int MAX_LOST_LOOP = 50;
 
         while(banana_loop_bool){
             // Timekeeping
@@ -324,9 +324,14 @@ namespace banana {
     }
 
     //%
-    void pid_value(float _kp_turn, float _kp_dist){
+    void kp_value(float _kp_turn, float _kp_dist){
         KP_TURN = _kp_turn;
         KP_DIST = _kp_dist;
+    }
+
+    void kd_value(float _kd_turn, float _kd_dist){
+        KD_TURN = _kd_turn;
+        KD_DIST = _kd_dist;
     }
 
     //%

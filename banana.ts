@@ -22,8 +22,11 @@ namespace banana {
     //% shim=banana::husky_size
     function _husky_size(width: number, height: number, isDetected: boolean): void { return; }
 
-    //% shim=banana::pid_value
-    function _pid_value(KPTurn: number, KPDist: number): void { return; }
+    //% shim=banana::kp_value
+    function _kp_value(KPTurn: number, KPDist: number): void { return; }
+
+    //% shim=banana::kd_value
+    function _kd_value(KDTurn: number, KDDist: number): void { return; }
 
     //% shim=banana::set_auto_mode
     function _set_auto_mode(EnableAuto: boolean): void { return; }
@@ -61,8 +64,9 @@ namespace banana {
     //% blockID:banana_PIDValue
     //% block="set PID values KPTurn: %KPTurn KPDist: %KPDist"
     //% weight=50
-    export function pidValue(KPTurn: number, KPDist: number): void{
-        _pid_value(KPTurn, KPDist);
+    export function pidValue(KPTurn: number, KPDist: number, KDTurn: number, KDDist: number): void{
+        _kp_value(KPTurn, KPDist);
+        _kd_value(KDTurn, KDDist);
     }
 
     //% blockID:banana_SetAutoMode
