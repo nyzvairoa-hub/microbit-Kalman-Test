@@ -39,8 +39,8 @@ banana.setAutoMode(true)
 banana.pidValue(
 0.4,
 2.5,
-0.001,
-0.001
+10,
+10
 )
 banana.KalmanFilterValues(9, 1)
 huskylens.initI2c()
