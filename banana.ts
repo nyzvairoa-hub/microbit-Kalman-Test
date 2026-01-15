@@ -62,7 +62,7 @@ namespace banana {
     }
 
     //% blockID:banana_PIDValue
-    //% block="set PID values KPTurn: %KPTurn KPDist: %KPDist"
+    //% block="set PID values KPTurn: %KPTurn KPDist: %KPDist KDTurn: %KDTurn KDDist: %KDDist"
     //% weight=50
     export function pidValue(KPTurn: number, KPDist: number, KDTurn: number, KDDist: number): void{
         _kp_value(KPTurn, KPDist);
