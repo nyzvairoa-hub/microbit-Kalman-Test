@@ -21,7 +21,7 @@ class PVKalman{
 
         PVKalman(float measurement_noise, float process_noise){
             // initial state
-            x = 0;
+            x = 160;
             v = 0;
 
             // initial covariance
