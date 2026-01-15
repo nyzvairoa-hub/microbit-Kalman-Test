@@ -329,6 +329,7 @@ namespace banana {
         KP_DIST = _kp_dist;
     }
 
+    //%
     void kd_value(float _kd_turn, float _kd_dist){
         KD_TURN = _kd_turn;
         KD_DIST = _kd_dist;
