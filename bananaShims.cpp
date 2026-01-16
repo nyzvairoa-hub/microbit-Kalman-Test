@@ -259,7 +259,7 @@ namespace banana {
                     float dist_D = KD_DIST * velocityDist;
 
                     // FIX: Apply the scaler to the turn!
-                    int turnOutput = (int)((turn_P - turn_D) * dist_scaler);
+                    int turnOutput = (int)((turn_P + turn_D) * dist_scaler);
                     int driveOutput = (int)(dist_P - dist_D);
 
                     // Anti-Stall
