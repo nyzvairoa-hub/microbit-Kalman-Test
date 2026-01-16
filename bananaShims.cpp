@@ -346,5 +346,14 @@ namespace banana {
     void KalmanFilterValues(float r_meas, float q_meas){
         r_measure = r_meas;
         q_measure = q_meas;
+
+        // ADD THESE LINES TO UPDATE THE OBJECTS
+        filterX.r_measure = r_meas;
+        filterX.q_pos = q_meas;
+        filterX.q_vel = q_meas;
+
+        filterWth.r_measure = r_meas;
+        filterWth.q_pos = q_meas;
+        filterWth.q_vel = q_meas;
     }
 } 
