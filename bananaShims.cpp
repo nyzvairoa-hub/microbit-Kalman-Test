@@ -193,14 +193,12 @@ namespace banana {
                 lostCount = 0;
             } else {
                 lostCount++;
-                if(lostCount == 1){
-                    motorSpeed[0] = (int)(motorSpeed[0] * 0.80);
-                    motorSpeed[2] = (int)(motorSpeed[2] * 0.80);
-                }
-                else if(lostCount > MAX_LOST_LOOP){
+                if(lostCount > MAX_LOST_LOOP){
                     filterX.v = 0; filterWth.v = 0;
                 }
-
+                
+                motorSpeed[0] = (int)(motorSpeed[0] * 0.80);
+                motorSpeed[2] = (int)(motorSpeed[2] * 0.80);
                 // Optional: Hard stop if it gets too slow to save battery/noise
                 if(abs(motorSpeed[0]) < 20) motorSpeed[0] = 0;
                 if(abs(motorSpeed[2]) < 20) motorSpeed[2] = 0;
