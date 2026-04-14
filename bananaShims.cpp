@@ -184,7 +184,7 @@ namespace banana {
             lastTime = now;
             uBit.serial.printf("%d\r\n", dt_ms);
             // Kalman Predict
-            float dt = 0.01; 
+            //float dt = 0.01; 
             filterX.predict(dt); filterWth.predict(dt);
 
             if(isAutoMode){
