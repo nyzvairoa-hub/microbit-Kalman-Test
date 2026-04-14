@@ -190,7 +190,7 @@ namespace banana {
             uBit.serial.printf("%d\r\n", dt_ms);
             // Kalman Predict
             //float dt = 0.01; 
-            filterAngle.predict(dt); filterDistance.predict(dt);
+            filterAngle.predict(dt_ms); filterDistance.predict(dt_ms);
 
             if(isAutoMode){
                 if(objectDectected){
@@ -358,9 +358,9 @@ namespace banana {
         q_process_angle_vel = q_meas_vel;
 
         // ADD THESE LINES TO UPDATE THE OBJECTS
-        filterAngle.r_measure = r_meas;
-        filterAngle.q_pos = q_meas_pos;
-        filterAngle.q_vel = q_meas_vel;
+        filterAngle.R_measure = r_meas;
+        filterAngle.Q_pos = q_meas_pos;
+        filterAngle.Q_vel = q_meas_vel;
 
     }
 
@@ -370,8 +370,8 @@ namespace banana {
         q_process_distance_vel = q_meas_vel;
 
         // ADD THESE LINES TO UPDATE THE OBJECTS
-        filterDistance.r_measure = r_measure;
-        filterDistance.q_pos = q_meas_pos;
-        filterDistance.q_vel = q_meas_vel;
+        filterDistance.R_measure = r_measure;
+        filterDistance.Q_pos = q_meas_pos;
+        filterDistance.Q_vel = q_meas_vel;
     }
 } 
