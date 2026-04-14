@@ -1,6 +1,6 @@
 #include "pxt.h" 
 #include "MicroBit.h"
-#include "KalmanFilterHeader.h"
+#include "NewKalmanFilterHeader.h"
 
 using namespace pxt;
 
@@ -24,11 +24,16 @@ namespace banana {
     static int globalChannel[4] = {4,6,10,8};
 
     static float r_measure = 0;
-    static float q_measure = 0;
+    static float q_process_angle_pos = 0;
+    static float q_process_angle_vel = 0;
+    static float q_process_distance_pos = 0;
+    static float q_process_distance_vel = 0;
 
     // --- Kalman Filter Initiation ---
-    static PVKalman filterX(r_measure, q_measure);
-    static PVKalman filterWth(r_measure, q_measure);
+    //static PVKalman filterX(r_measure, q_measure);
+    //static PVKalman filterWth(r_measure, q_measure);
+    static PVKalman filterAngle(r_measure, q_process_angle_pos, q_process_angle_vel);
+    static PVKalman filterDistance(r_measure, q_process_distance_pos, q_process_distance_vel);
 
     // --- Variable for sensor --- 
     static int sensorX = 0;
@@ -185,16 +190,16 @@ namespace banana {
             uBit.serial.printf("%d\r\n", dt_ms);
             // Kalman Predict
             //float dt = 0.01; 
-            filterX.predict(dt); filterWth.predict(dt);
+            filterAngle.predict(dt); filterDistance.predict(dt);
 
             if(isAutoMode){
                 if(objectDectected){
                 
-                filterX.update((float)sensorX); filterWth.update((float)width);
+                filterAngle.update((float)sensorX); filterDistance.update((float)width);
                 lostCount = 0;
             
-                int smoothX = (int)filterX.x;
-                int smoothW = (int)filterWth.x;
+                int smoothX = (int)filterAngle.pos;
+                int smoothW = (int)filterDistance.pos;
 
                 int errorTurn = smoothX - TARGET_X;
                 int errorDist = TARGET_WTH - smoothW;
@@ -240,8 +245,8 @@ namespace banana {
                     dist_scaler = map_float(currentWidth, minWidth, maxWidth, 0.7, 1.0);
                 }
 
-                float velocityTurn = filterX.v; 
-                float velocityDist = filterWth.v;
+                float velocityTurn = filterAngle.vel; 
+                float velocityDist = filterDistance.vel;
 
                 float turn_P = dynamic_kp_turn * errorTurn;
                 float turn_D = KD_TURN * velocityTurn;
@@ -280,7 +285,7 @@ namespace banana {
                 else {
                     lostCount++;
                     if(lostCount > MAX_LOST_LOOP){
-                        filterX.v = 0; filterWth.v = 0;
+                        filterAngle.vel = 0; filterDistance.vel = 0;
                         for(int i = 0; i < 4; i++){ motorSpeed[i] = 0; }
                 }
                     motorSpeed[0] = (int)(motorSpeed[0] * 0.80);
@@ -347,17 +352,26 @@ namespace banana {
     }
 
     //%
-    void KalmanFilterValues(float r_meas, float q_meas){
+    void KalmanFilterValuesAngle(float r_meas, float q_meas_pos, float q_meas_vel){
         r_measure = r_meas;
-        q_measure = q_meas;
+        q_process_angle_pos = q_meas_pos;
+        q_process_angle_vel = q_meas_vel;
 
         // ADD THESE LINES TO UPDATE THE OBJECTS
-        filterX.r_measure = r_meas;
-        filterX.q_pos = q_meas;
-        filterX.q_vel = q_meas;
+        filterAngle.r_measure = r_meas;
+        filterAngle.q_pos = q_meas_pos;
+        filterAngle.q_vel = q_meas_vel;
 
-        filterWth.r_measure = r_meas;
-        filterWth.q_pos = q_meas;
-        filterWth.q_vel = q_meas;
+    }
+
+    //%
+    void KalmanFilterValuesDistance(float q_meas_pos, float q_meas_vel){
+        q_process_distance_pos = q_meas_pos;
+        q_process_distance_vel = q_meas_vel;
+
+        // ADD THESE LINES TO UPDATE THE OBJECTS
+        filterDistance.r_measure = r_measure;
+        filterDistance.q_pos = q_meas_pos;
+        filterDistance.q_vel = q_meas_vel;
     }
 } 
