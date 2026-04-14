@@ -180,23 +180,32 @@ namespace banana {
 // --- 2. FIBER LOOP ---
     void banana_loop(){
         int lostCount = 0;
-        const int MAX_LOST_LOOP = 50;
+        const int MAX_LOST_LOOP = 20;
 
         while(banana_loop_bool){
             // Timekeeping
             uint64_t now = uBit.systemTime();
             int dt_ms = (int)(now - lastTime);
             lastTime = now;
-            uBit.serial.printf("%d\r\n", dt_ms);
+            
+            // --- BUG FIX: Convert ms to seconds for the Physics Math ---
+            float dt = (float)dt_ms / 1000.0f;
+            if (dt <= 0.0f) dt = 0.01f;
+            if (dt > 0.1f) dt = 0.1f; // Cap dt to prevent massive jumps if processor hangs
+            
             // Kalman Predict
             //float dt = 0.01; 
-            filterAngle.predict(dt_ms); filterDistance.predict(dt_ms);
+            filterAngle.predict(dt); filterDistance.predict(dt);
 
             if(isAutoMode){
-                if(objectDectected){
                 
-                filterAngle.update((float)sensorX); filterDistance.update((float)width);
-                lostCount = 0;
+                if(objectDectected){
+                    filterAngle.update((float)sensorX); filterDistance.update((float)width);
+                    lostCount = 0;
+                } 
+                else {
+                    lostCount++;
+                }
             
                 int smoothX = (int)filterAngle.pos;
                 int smoothW = (int)filterDistance.pos;
@@ -270,30 +279,23 @@ namespace banana {
 
                 //driveOutput = 100; // Constant speed for testing
 
+                if(lostCount > MAX_LOST_LOOP){
+                    turnOutput = 0;
+                    driveOutput = (int)(driveOutput * 0.80); // Coast to a stop
+                    if(abs(driveOutput) < 20) driveOutput = 0; // Hard stop at low speeds
+                }
+
                 // Mixing
                 int leftSpeed = driveOutput + turnOutput;
                 int rightSpeed = driveOutput - turnOutput;
 
-                uBit.serial.printf("right: %d, left: %d, drive: %d, turn: %d\r\n", rightSpeed, leftSpeed, driveOutput, turnOutput);
+                //uBit.serial.printf("right: %d, left: %d, drive: %d, turn: %d\r\n", rightSpeed, leftSpeed, driveOutput, turnOutput);
 
                 // FIX 3: Enable All Motors (Assuming 4WD)
                 motorSpeed[0] = leftSpeed;
                 //motorSpeed[1] = leftSpeed; // Uncommented
                 motorSpeed[2] = rightSpeed;
                 //motorSpeed[3] = rightSpeed; // Uncommented
-                } 
-                else {
-                    lostCount++;
-                    if(lostCount > MAX_LOST_LOOP){
-                        filterAngle.vel = 0; filterDistance.vel = 0;
-                        for(int i = 0; i < 4; i++){ motorSpeed[i] = 0; }
-                }
-                    motorSpeed[0] = (int)(motorSpeed[0] * 0.80);
-                    motorSpeed[2] = (int)(motorSpeed[2] * 0.80);
-                    // Optional: Hard stop if it gets too slow to save battery/noise
-                    if(abs(motorSpeed[0]) < 20) motorSpeed[0] = 0;
-                    if(abs(motorSpeed[2]) < 20) motorSpeed[2] = 0;
-                }
 
             }
 
