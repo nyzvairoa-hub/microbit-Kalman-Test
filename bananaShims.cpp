@@ -53,7 +53,7 @@ namespace banana {
     const int DEAD_DIST = 5;
 
     const int MAX_TURN_SPEED = 150;
-    const int MIN_DRIVE_SPEED = 50;
+    const int MIN_DRIVE_SPEED = 30;
 
     // Fuzzy Logic Parameters
     static float minE = 20.0;
@@ -252,8 +252,10 @@ namespace banana {
                 // Anti-Stall
 
                 const int TURN_DEADBAND = 30; 
-                if (turnOutput > 0) turnOutput += TURN_DEADBAND;
-                else if (turnOutput < 0) turnOutput -= TURN_DEADBAND;                
+                if(abs(driveOutput) < TURN_DEADBAND_VAL) {
+                if (turnOutput > 0) turnOutput += TURN_DEADBAND_VAL;
+                else if (turnOutput < 0) turnOutput -= TURN_DEADBAND_VAL;
+                }                
 
                 if(abs(driveOutput) > 0 && abs(driveOutput) < MIN_DRIVE_SPEED){
                     if(driveOutput > 0) driveOutput = MIN_DRIVE_SPEED;
