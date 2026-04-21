@@ -53,7 +53,7 @@ namespace banana {
     const int DEAD_DIST = 5;
 
     const int MAX_TURN_SPEED = 150;
-    const int MIN_DRIVE_SPEED = 30;
+    const int MIN_DRIVE_SPEED = 40;
 
     // Fuzzy Logic Parameters
     static float minE = 20.0;
