@@ -218,56 +218,43 @@ namespace banana {
                 if (abs(errorDist) < DEAD_DIST) errorDist = 0;
 
                 // --- LOGIC FIX 1: Prevent Negative Drive Gain ---
-                float absError = (float)abs(errorTurn);
-                float dynamic_kp_turn = KP_TURN;
-                float dynamic_kp_dist = KP_DIST;
-
-                if(absError < minE){
-                    // Zone 1: Driving Straight
-                    dynamic_kp_turn = KP_TURN;
-                    dynamic_kp_dist = KP_DIST;
-                } else if(absError > maxE){
-                    // Zone 3: Hard Turn (Panic)
-                    dynamic_kp_turn = KP_TURN * 0.5; 
-                    // FIX: Multiply instead of Subtract. 
-                    // This keeps 20% of drive speed instead of stopping/reversing.
-                    dynamic_kp_dist = KP_DIST * 0.2; 
-                } else {
-                    // Zone 2: Sliding
-                    dynamic_kp_turn = map_float(absError, minE, maxE, KP_TURN, KP_TURN);
-                    // FIX: Map to 20% scaler
-                    dynamic_kp_dist = map_float(absError, minE, maxE, KP_DIST, KP_DIST);
-                }
-
-                // --- LOGIC FIX 2: Use the Distance Scaler ---
+                float currentWidth = (float)smoothW; 
                 float dist_scaler = 1.0;
-                float currentWidth = (float)smoothW; // Use filtered width
+                float drive_scaler = 1.0;
 
                 if (currentWidth <= minWidth) {
-                    // FAR AWAY: Steer Gentle
-                    dist_scaler = 0.7;
+                    // SCENARIO B: FAR AWAY
+                    dist_scaler = 0.5;   // Gentle, lazy turning arc
+                    drive_scaler = 1.0;  // 100% forward drive speed
                 } else if (currentWidth >= maxWidth) {
-                    // CLOSE UP: Steer Sharp
-                    dist_scaler = 1.0;
+                    // SCENARIO A: DANGER CLOSE
+                    dist_scaler = 1.0;   // 100% sharp pivot steering
+                    drive_scaler = 0.2;  // Drop forward speed to 20% to avoid crashing
                 } else {
-                    // MIDDLE
-                    dist_scaler = map_float(currentWidth, minWidth, maxWidth, 0.7, 1.0);
+                    // MIDDLE DISTANCE: Smooth transition
+                    dist_scaler = map_float(currentWidth, minWidth, maxWidth, 0.5, 1.0);
+                    drive_scaler = map_float(currentWidth, minWidth, maxWidth, 1.0, 0.2);
                 }
 
                 float velocityTurn = filterAngle.vel; 
                 float velocityDist = filterDistance.vel;
 
-                float turn_P = dynamic_kp_turn * errorTurn;
+                float turn_P = KP_TURN * errorTurn;
                 float turn_D = KD_TURN * velocityTurn;
 
-                float dist_P = dynamic_kp_dist * errorDist;
+                float dist_P = KD_DIST * errorDist;
                 float dist_D = KD_DIST * velocityDist;
 
                 // FIX: Apply the scaler to the turn!
                 int turnOutput = (int)((turn_P + turn_D) * dist_scaler);
-                int driveOutput = (int)(dist_P - dist_D);
+                int driveOutput = (int)((dist_P - dist_D) * drive_scaler);
 
                 // Anti-Stall
+
+                const int TURN_DEADBAND = 30; 
+                if (turnOutput > 0) turnOutput += TURN_DEADBAND;
+                else if (turnOutput < 0) turnOutput -= TURN_DEADBAND;                
+
                 if(abs(driveOutput) > 0 && abs(driveOutput) < MIN_DRIVE_SPEED){
                     if(driveOutput > 0) driveOutput = MIN_DRIVE_SPEED;
                     else driveOutput = -MIN_DRIVE_SPEED;
@@ -281,7 +268,7 @@ namespace banana {
 
                 if(lostCount > MAX_LOST_LOOP){
                     turnOutput = 0;
-                    driveOutput = (int)(driveOutput * 0.80); // Coast to a stop
+                    driveOutput = (int)(driveOutput * 0.20); // Coast to a stop
                     if(abs(driveOutput) < 20) driveOutput = 0; // Hard stop at low speeds
                 }
 
