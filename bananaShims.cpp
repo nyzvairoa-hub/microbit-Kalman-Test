@@ -252,9 +252,9 @@ namespace banana {
                 // Anti-Stall
 
                 const int TURN_DEADBAND = 30; 
-                if(abs(driveOutput) < TURN_DEADBAND_VAL) {
-                if (turnOutput > 0) turnOutput += TURN_DEADBAND_VAL;
-                else if (turnOutput < 0) turnOutput -= TURN_DEADBAND_VAL;
+                if(abs(driveOutput) < TURN_DEADBAND) {
+                if (turnOutput > 0) turnOutput += TURN_DEADBAND;
+                else if (turnOutput < 0) turnOutput -= TURN_DEADBAND;
                 }                
 
                 if(abs(driveOutput) > 0 && abs(driveOutput) < MIN_DRIVE_SPEED){
