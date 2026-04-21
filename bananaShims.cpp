@@ -43,7 +43,7 @@ namespace banana {
     static bool objectDectected = false;
 
     const int TARGET_X = 160;
-    const int TARGET_WTH = 100;
+    const int TARGET_WTH = 80;
     static float KP_TURN = 0.4;
     static float KP_DIST = 1.5;
     static float KD_TURN = 0.5; 
