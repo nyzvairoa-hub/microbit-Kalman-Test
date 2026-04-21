@@ -367,7 +367,8 @@ namespace banana {
     }
 
     //%
-    void KalmanFilterValuesDistance(float q_meas_pos, float q_meas_vel){
+    void KalmanFilterValuesDistance(float r_meas, float q_meas_pos, float q_meas_vel){
+        r_measure = r_meas;
         q_process_distance_pos = q_meas_pos;
         q_process_distance_vel = q_meas_vel;
 

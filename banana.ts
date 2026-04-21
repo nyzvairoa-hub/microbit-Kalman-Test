@@ -32,10 +32,10 @@ namespace banana {
     function _set_auto_mode(EnableAuto: boolean): void { return; }
 
     //% shim=banana::KalmanFilterValuesAngle
-    function _KalmanFilterValuesAngle(r_measure: number, q_measures_angle_pos: number, q_measures_angle_vel: number): void { return; }
+    function _KalmanFilterValuesAngle(r_measure_angle: number, q_measures_angle_pos: number, q_measures_angle_vel: number): void { return; }
 
     //% shim=banana::KalmanFilterValuesDistance
-    function _KalmanFilterValuesDistance(q_measures_dis_pos: number, q_measures_dis_vel: number): void { return; }
+    function _KalmanFilterValuesDistance(r_measure_dis: number, q_measures_dis_pos: number, q_measures_dis_vel: number): void { return; }
     
     //% blockId=banana_StartMotor
     //% block="start motor"
@@ -80,9 +80,9 @@ namespace banana {
     }
 
     //% blockID:banana_KalmanFilter
-    //% block="set Kalman Filter r_measure: %r_measure q_measure_angle: %q_measures_angle_pos and %q_measures_angle_vel q_measure_distance: %q_measures_dis_pos and %q_measures_dis_vel"
-    export function KalmanFilterValues(r_measure: number, q_measures_angle_pos: number, q_measures_angle_vel: number, q_measures_dis_pos: number, q_measures_dis_vel: number): void{
-        _KalmanFilterValuesAngle(r_measure, q_measures_angle_pos, q_measures_angle_vel);
-        _KalmanFilterValuesDistance(q_measures_dis_pos, q_measures_dis_vel);
+    //% block="set Kalman Filter r_measure: %r_measure_angle and %r_measure_dis q_measure_angle: %q_measures_angle_pos and %q_measures_angle_vel q_measure_distance: %q_measures_dis_pos and %q_measures_dis_vel"
+    export function KalmanFilterValues(r_measure_angle: number,r_measure_dis: number, q_measures_angle_pos: number, q_measures_angle_vel: number, q_measures_dis_pos: number, q_measures_dis_vel: number): void{
+        _KalmanFilterValuesAngle(r_measure_angle, q_measures_angle_pos, q_measures_angle_vel);
+        _KalmanFilterValuesDistance(r_measure_dis, q_measures_dis_pos, q_measures_dis_vel);
     }
 }
