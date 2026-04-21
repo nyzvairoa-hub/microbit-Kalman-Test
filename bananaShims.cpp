@@ -224,15 +224,15 @@ namespace banana {
 
                 if (currentWidth <= minWidth) {
                     // SCENARIO B: FAR AWAY
-                    dist_scaler = 0.5;   // Gentle, lazy turning arc
+                    dist_scaler = 0.2;   // Gentle, lazy turning arc
                     drive_scaler = 1.0;  // 100% forward drive speed
                 } else if (currentWidth >= maxWidth) {
                     // SCENARIO A: DANGER CLOSE
-                    dist_scaler = 1.0;   // 100% sharp pivot steering
+                    dist_scaler = 0.5;   // 100% sharp pivot steering
                     drive_scaler = 0.2;  // Drop forward speed to 20% to avoid crashing
                 } else {
                     // MIDDLE DISTANCE: Smooth transition
-                    dist_scaler = map_float(currentWidth, minWidth, maxWidth, 0.5, 1.0);
+                    dist_scaler = map_float(currentWidth, minWidth, maxWidth, 0.2, 0.5);
                     drive_scaler = map_float(currentWidth, minWidth, maxWidth, 1.0, 0.2);
                 }
 
