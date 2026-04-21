@@ -242,7 +242,7 @@ namespace banana {
                 float turn_P = KP_TURN * errorTurn;
                 float turn_D = KD_TURN * velocityTurn;
 
-                float dist_P = KD_DIST * errorDist;
+                float dist_P = KP_DIST * errorDist;
                 float dist_D = KD_DIST * velocityDist;
 
                 // FIX: Apply the scaler to the turn!
