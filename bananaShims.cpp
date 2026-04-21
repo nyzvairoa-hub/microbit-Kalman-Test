@@ -228,15 +228,15 @@ namespace banana {
                     dynamic_kp_dist = KP_DIST;
                 } else if(absError > maxE){
                     // Zone 3: Hard Turn (Panic)
-                    dynamic_kp_turn = KP_TURN + 0.2; 
+                    dynamic_kp_turn = KP_TURN * 0.5; 
                     // FIX: Multiply instead of Subtract. 
                     // This keeps 20% of drive speed instead of stopping/reversing.
                     dynamic_kp_dist = KP_DIST * 0.2; 
                 } else {
                     // Zone 2: Sliding
-                    dynamic_kp_turn = map_float(absError, minE, maxE, KP_TURN, KP_TURN + 0.2);
+                    dynamic_kp_turn = map_float(absError, minE, maxE, KP_TURN, KP_TURN);
                     // FIX: Map to 20% scaler
-                    dynamic_kp_dist = map_float(absError, minE, maxE, KP_DIST, KP_DIST * 0.2);
+                    dynamic_kp_dist = map_float(absError, minE, maxE, KP_DIST, KP_DIST);
                 }
 
                 // --- LOGIC FIX 2: Use the Distance Scaler ---
