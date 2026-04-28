@@ -85,4 +85,12 @@ namespace banana {
         _KalmanFilterValuesAngle(r_measure_angle, q_measures_angle_pos, q_measures_angle_vel);
         _KalmanFilterValuesDistance(r_measure_dis, q_measures_dis_pos, q_measures_dis_vel);
     }
+
+
+    //% block="get C++ latency (ms)"
+    //% weight=10
+    //% shim=banana::dt_time
+    export function getLoopLatency(): number {
+        return 0; // This is a dummy return; the C++ shim overrides it.
+    }
 }

@@ -64,7 +64,7 @@ namespace banana {
     static float maxWidth = 120.0; // Close up
 
     uint64_t lastTime = uBit.systemTime();
-
+    int global_dt_ms = 0; 
     // --- 1. HELPER FUNCTIONS --- 
 
     void i2cWrite(uint8_t reg, uint8_t value){
@@ -187,7 +187,10 @@ namespace banana {
             uint64_t now = uBit.systemTime();
             int dt_ms = (int)(now - lastTime);
             lastTime = now;
-            
+
+            global_dt_ms = dt_ms;
+
+            //uBit.serial.printf("%d\r\n", dt_ms);
             // --- BUG FIX: Convert ms to seconds for the Physics Math ---
             float dt = (float)dt_ms / 1000.0f;
             if (dt <= 0.0f) dt = 0.01f;
@@ -340,6 +343,11 @@ namespace banana {
     //%
     void set_auto_mode(bool enabled){
         isAutoMode = enabled;
+    }
+
+    //%
+    int dt_time(){
+        return global_dt_ms;
     }
 
     //%
