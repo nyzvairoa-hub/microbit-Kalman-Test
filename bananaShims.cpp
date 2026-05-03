@@ -10,6 +10,7 @@ using namespace pxt;
 #define PCA9685_PRESCALE 0xFE
 #define LED0_ON_L 0x06
 
+
 #define STOP 0
 #define FORWARD 1
 #define BACKWARD 2
@@ -128,6 +129,21 @@ namespace banana {
             set_pwm(channel, 0, 0);
             set_pwm(channel + 1, 0, 0);
         }
+    }
+
+    void controlServo(int channel, int degrees) {
+        // 1. Constrain to 0-180 degrees for safety
+        if (degrees < 0) degrees = 0;
+        if (degrees > 180) degrees = 180;
+
+        // 2. Math from MotionBit .ts: Map 0-180 deg to 500-2500us pulse width
+        int pulseWidth = (degrees * 2000) / 180 + 500;
+
+        // 3. Calculate PWM duty cycle (0-4095) for a 50Hz (20000us) period
+        int pwm = (pulseWidth * 4096) / 20000;
+
+        // 4. Send to PCA9685 using your existing I2C function
+        set_pwm(channel, 0, pwm);
     }
 
     // --- REFINED SCANNER ---
@@ -313,6 +329,11 @@ namespace banana {
             isAutoMode = false;
             motorSpeed[motorID] = speed;
         }
+    }
+    
+    //%
+    void banana_set_servo(int channel, int degrees){
+        controlServo(channel, degrees);
     }
 
     //%

@@ -6,6 +6,18 @@ enum bananaMotor{
     M4 = 3
 }
 
+enum bananaServo {
+    S1 = 0,
+    S2 = 1,
+    S3 = 2,
+    S4 = 3,
+    S5 = 15,
+    S6 = 14,
+    S7 = 13,
+    S8 = 12,
+
+}
+
 // Icon unicode characters can be found at: http://fontawesome.io/icons/
 //% color=#c2b711 weight=100 icon="\uf1ec" block="Robot Smooth" advanced=false
 namespace banana {
@@ -15,6 +27,8 @@ namespace banana {
 
     //% shim=banana::banana_set_motor
     function _set_motor(id: number, speed: number): void { return; }
+    //% shim=banana::banana_set_servo
+    function _banana_set_servo(channel: number, degrees: number): void { return; }
 
     //% shim=banana::husky_pos
     function _husky_pos(x: number, y: number): void { return; }
@@ -48,6 +62,12 @@ namespace banana {
     //% speed.min=-255 speed.max=255 speed.defl=0
     export function bananaRun(motor: bananaMotor, speed: number): void{
         _set_motor(motor, speed);
+    }
+
+    //% block="banana set servo channel %channel to %degrees degrees"
+    //% degrees.min=0 degrees.max=180
+    export function banana_set_servo(channel: bananaServo, degrees: number): void {
+        _banana_set_servo(channel, degrees); 
     }
 
     //% blockId=banana_Stop
@@ -93,4 +113,5 @@ namespace banana {
     export function getLoopLatency(): number {
         return 0; // This is a dummy return; the C++ shim overrides it.
     }
+
 }
