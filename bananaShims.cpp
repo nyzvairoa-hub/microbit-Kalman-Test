@@ -179,7 +179,7 @@ namespace banana {
     // --- 2. FIBER LOOP ---
 // --- 2. FIBER LOOP ---
     void banana_loop(){
-        int lostCount = 0;
+        int lostCount = 100;
         const int MAX_LOST_LOOP = 70;
 
         while(banana_loop_bool){
