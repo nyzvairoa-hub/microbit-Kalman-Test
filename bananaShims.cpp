@@ -273,8 +273,8 @@ namespace banana {
 
                 if(lostCount > MAX_LOST_LOOP){
                     turnOutput = 0;
-                    driveOutput = (int)(driveOutput * 0.20); // Coast to a stop
-                    if(abs(driveOutput) < 20) driveOutput = 0; // Hard stop at low speeds
+                    driveOutput = 0; //(int)(driveOutput * 0.20); // Coast to a stop
+                    //if(abs(driveOutput) < 20) driveOutput = 0; // Hard stop at low speeds
                 }
 
                 // Mixing
