@@ -31,7 +31,7 @@ namespace banana {
     function _banana_set_servo(channel: number, degrees: number): void { return; }
 
     //% shim=banana::servo_PID
-    function _servo_PID(channel: number, KP: number, KD: number): void { return; }
+    function _servo_PID(channel: number, KPServo: number, KDServo: number): void { return; }
 
     //% shim=banana::husky_pos
     function _husky_pos(x: number, y: number): void { return; }
@@ -75,8 +75,8 @@ namespace banana {
 
     //% blockId=servo_PID
     //% block="banana set servo channel %channel with PID KP: %KP and KD: %KD"
-    export function servo_PID(channel: bananaServo, KP: number, KD: number): void {
-        _servo_PID(channel, KP, KD); 
+    export function servo_PID(channel: bananaServo, KPServo: number, KDServo: number): void {
+        _servo_PID(channel, KPServo, KDServo); 
     }
 
     //% blockId=banana_Stop
