@@ -49,12 +49,17 @@ namespace banana {
     static float KP_DIST = 1.5;
     static float KD_TURN = 0.5; 
     static float KD_DIST = 0.5;
+    static float KP_SERVO = 0.5;
+    static float KD_SERVO = 0.5;
+    static int channelServo = 0;
 
     const int DEAD_TURN = 10;
     const int DEAD_DIST = 5;
 
     const int MAX_TURN_SPEED = 150;
     const int MIN_DRIVE_SPEED = 40;
+
+    static float currentServoAngle = 90.0;
 
     // Fuzzy Logic Parameters
     static float minE = 20.0;
@@ -229,7 +234,21 @@ namespace banana {
                 int smoothX = (int)filterAngle.pos;
                 int smoothW = (int)filterDistance.pos;
 
-                int errorTurn = smoothX - TARGET_X;
+                int errorTurnServo = smoothX - TARGET_X;
+
+                float servo_P = KP_SERVO * errorTurnServo;
+                float servo_D = KD_SERVO * filterAngle.vel;
+                
+                float servoAdjustment = servo_P + servo_D; 
+
+                currentServoAngle -= servoAdjustment;
+
+                if(currentServoAngle < 0.0) currentServoAngle = 0.0;
+                if(currentServoAngle > 180.0) currentServoAngle = 180.0;
+
+                controlServo(channelServo, (int)currentServoAngle);
+                
+                int errorTurn = currentServoAngle - 90;
                 int errorDist = TARGET_WTH - smoothW;
 
                 // Deadbands
@@ -291,6 +310,9 @@ namespace banana {
                     turnOutput = 0;
                     driveOutput = 0; //(int)(driveOutput * 0.20); // Coast to a stop
                     //if(abs(driveOutput) < 20) driveOutput = 0; // Hard stop at low speeds
+                    
+                    currentServoAngle = 90.0; // Center the servo when lost
+                    controlServo(channelServo, currentServoAngle);
                 }
 
                 // Mixing
@@ -330,10 +352,17 @@ namespace banana {
             motorSpeed[motorID] = speed;
         }
     }
-    
+
     //%
     void banana_set_servo(int channel, int degrees){
         controlServo(channel, degrees);
+    }
+
+    //%
+    void servo_PID(int channel,float kp, float kd){
+        channelServo = channel;
+        KP_SERVO = kp;
+        KD_SERVO = kd;
     }
 
     //%
