@@ -43,7 +43,7 @@ namespace banana {
     static int height = 0;
     static bool objectDectected = false;
 
-    static int TARGET_X = 160;
+    const int TARGET_X = 160;
     const int TARGET_WTH = 80;
     static float KP_TURN = 0.4;
     static float KP_DIST = 1.5;
@@ -52,6 +52,7 @@ namespace banana {
     static float KP_SERVO = 0.5;
     static float KD_SERVO = 0.5;
     static int channelServo = 0;
+    static float prevErrorTurn = 0.0;
 
     const int DEAD_TURN = 3;
     const int DEAD_DIST = 5;
@@ -225,7 +226,6 @@ namespace banana {
                 
                 if(objectDectected){
                     filterAngle.update((float)sensorX); filterDistance.update((float)width);
-                    TARGET_X = 160;
                     lostCount = 0;
                 } 
                 else {
@@ -278,8 +278,12 @@ namespace banana {
                     drive_scaler = map_float(currentWidth, minWidth, maxWidth, 1.0, 0.2);
                 }
 
+                // Calculate how fast the ERROR is changing (This is your safe Chassis Velocity)
+                float chassisVelocity = errorTurn - prevErrorTurn; 
+                prevErrorTurn = errorTurn; // Save for the next loop
+
                 float turn_P = KP_TURN * errorTurn;
-                float turn_D = KD_TURN * velocityTurn;
+                float turn_D = KD_TURN * chassisVelocity; // Now using safe degree math!
 
                 float dist_P = KP_DIST * errorDist;
                 float dist_D = KD_DIST * velocityDist;
@@ -311,9 +315,11 @@ namespace banana {
                     turnOutput = 0;
                     driveOutput = 0; //(int)(driveOutput * 0.20); // Coast to a stop
                     //if(abs(driveOutput) < 20) driveOutput = 0; // Hard stop at low speeds
+
+                    filterAngle.vel = 0.0;
+                    filterAngle.pos = 160.0;
                     
                     currentServoAngle = 90.0; // Center the servo when lost
-                    TARGET_X = 0;
                     controlServo(channelServo, currentServoAngle);
                 }
 
