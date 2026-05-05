@@ -53,7 +53,7 @@ namespace banana {
     static float KD_SERVO = 0.5;
     static int channelServo = 0;
 
-    const int DEAD_TURN = 10;
+    const int DEAD_TURN = 3;
     const int DEAD_DIST = 5;
 
     const int MAX_TURN_SPEED = 150;
@@ -234,10 +234,13 @@ namespace banana {
                 int smoothX = (int)filterAngle.pos;
                 int smoothW = (int)filterDistance.pos;
 
+                float velocityTurn = filterAngle.vel; 
+                float velocityDist = filterDistance.vel;
+
                 int errorTurnServo = smoothX - TARGET_X;
 
                 float servo_P = KP_SERVO * errorTurnServo;
-                float servo_D = KD_SERVO * filterAngle.vel;
+                float servo_D = KD_SERVO * velocityTurn;
                 
                 float servoAdjustment = servo_P + servo_D; 
 
@@ -248,7 +251,7 @@ namespace banana {
 
                 controlServo(channelServo, (int)currentServoAngle);
                 
-                int errorTurn = currentServoAngle - 90;
+                int errorTurn = 90.0 - currentServoAngle;
                 int errorDist = TARGET_WTH - smoothW;
 
                 // Deadbands
@@ -273,9 +276,6 @@ namespace banana {
                     dist_scaler = map_float(currentWidth, minWidth, maxWidth, 0.2, 0.5);
                     drive_scaler = map_float(currentWidth, minWidth, maxWidth, 1.0, 0.2);
                 }
-
-                float velocityTurn = filterAngle.vel; 
-                float velocityDist = filterDistance.vel;
 
                 float turn_P = KP_TURN * errorTurn;
                 float turn_D = KD_TURN * velocityTurn;
