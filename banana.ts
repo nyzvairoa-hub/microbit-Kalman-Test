@@ -76,7 +76,7 @@ namespace banana {
     //% blockId=servo_PID
     //% block="banana set servo channel %channel with PID KP: %KP and KD: %KD"
     export function servo_PID(channel: bananaServo, KP: number, KD: number): void {
-        _servo_PID(channel, degrees); 
+        _servo_PID(channel, KP, KD); 
     }
 
     //% blockId=banana_Stop
