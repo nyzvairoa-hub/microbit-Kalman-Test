@@ -225,6 +225,7 @@ namespace banana {
                 
                 if(objectDectected){
                     filterAngle.update((float)sensorX); filterDistance.update((float)width);
+                    TARGET_X = 160;
                     lostCount = 0;
                 } 
                 else {
@@ -312,6 +313,7 @@ namespace banana {
                     //if(abs(driveOutput) < 20) driveOutput = 0; // Hard stop at low speeds
                     
                     currentServoAngle = 90.0; // Center the servo when lost
+                    TARGET_X = 0;
                     controlServo(channelServo, currentServoAngle);
                 }
 
