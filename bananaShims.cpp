@@ -53,7 +53,7 @@ namespace banana {
     const int DEAD_DIST = 5;
 
     const int MAX_TURN_SPEED = 150;
-    const int MIN_DRIVE_SPEED = 40;
+    const int MIN_DRIVE_SPEED = 50;
 
     // Fuzzy Logic Parameters
     static float minE = 20.0;
@@ -220,37 +220,15 @@ namespace banana {
                 if (abs(errorTurn) < DEAD_TURN) errorTurn = 0;
                 if (abs(errorDist) < DEAD_DIST) errorDist = 0;
 
-                // --- LOGIC FIX 1: Prevent Negative Drive Gain ---
-                float currentWidth = (float)smoothW; 
-                float dist_scaler = 1.0;
-                float drive_scaler = 1.0;
-
-                if (currentWidth <= minWidth) {
-                    // SCENARIO B: FAR AWAY
-                    dist_scaler = 0.2;   // Gentle, lazy turning arc
-                    drive_scaler = 1.0;  // 100% forward drive speed
-                } else if (currentWidth >= maxWidth) {
-                    // SCENARIO A: DANGER CLOSE
-                    dist_scaler = 0.5;   // 100% sharp pivot steering
-                    drive_scaler = 0.2;  // Drop forward speed to 20% to avoid crashing
-                } else {
-                    // MIDDLE DISTANCE: Smooth transition
-                    dist_scaler = map_float(currentWidth, minWidth, maxWidth, 0.2, 0.5);
-                    drive_scaler = map_float(currentWidth, minWidth, maxWidth, 1.0, 0.2);
-                }
-
-                float velocityTurn = filterAngle.vel; 
-                float velocityDist = filterDistance.vel;
-
                 float turn_P = KP_TURN * errorTurn;
-                float turn_D = KD_TURN * velocityTurn;
+                float turn_D = KD_TURN * filterAngle.vel;
 
                 float dist_P = KP_DIST * errorDist;
-                float dist_D = KD_DIST * velocityDist;
+                float dist_D = KD_DIST * filterDistance.vel;
 
                 // FIX: Apply the scaler to the turn!
-                int turnOutput = (int)((turn_P + turn_D) * dist_scaler);
-                int driveOutput = (int)((dist_P - dist_D) * drive_scaler);
+                int turnOutput = (int)(turn_P + turn_D);
+                int driveOutput = (int)(dist_P - dist_D);
 
                 // Anti-Stall
 
