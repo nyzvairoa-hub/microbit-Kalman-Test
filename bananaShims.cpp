@@ -55,13 +55,7 @@ namespace banana {
     const int MAX_TURN_SPEED = 150;
     const int MIN_DRIVE_SPEED = 50;
 
-    // Fuzzy Logic Parameters
-    static float minE = 20.0;
-    static float maxE = 120.0;
-
-    // Your "Car Intuition" Limits
-    static float minWidth = 30.0;  // Far away (Limit you found)
-    static float maxWidth = 120.0; // Close up
+    static int lastSensorX = -1;
 
     uint64_t lastTime = uBit.systemTime();
     int global_dt_ms = 0; 
@@ -203,7 +197,10 @@ namespace banana {
             if(isAutoMode){
                 
                 if(objectDectected){
-                    filterAngle.update((float)sensorX); filterDistance.update((float)width);
+                    if(sensorX != lastSensorX){
+                        filterAngle.update((float)sensorX); filterDistance.update((float)width);
+                        lastSensorX = sensorX;
+                        }
                     lostCount = 0;
                 } 
                 else {
