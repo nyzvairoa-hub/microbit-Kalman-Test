@@ -224,7 +224,7 @@ namespace banana {
                 float dist_D = KD_DIST * filterDistance.vel;
 
                 // FIX: Apply the scaler to the turn!
-                int turnOutput = (int)(turn_P + turn_D);
+                int turnOutput = (int)(turn_P - turn_D);
                 int driveOutput = (int)(dist_P - dist_D);
 
                 // Anti-Stall
