@@ -193,6 +193,14 @@ namespace banana {
             // Kalman Predict
             //float dt = 0.01; 
             filterAngle.predict(dt); filterDistance.predict(dt);
+            filterAngle.vel = filterAngle.vel * 0.80; 
+            filterDistance.vel = filterDistance.vel * 0.80;
+
+            if (filterAngle.pos > 320.0) filterAngle.pos = 320.0;
+            if (filterAngle.pos < 0.0) filterAngle.pos = 0.0;
+
+            if (filterDistance.pos > 320.0) filterDistance.pos = 320.0;
+            if (filterDistance.pos < 0.0) filterDistance.pos = 0.0;
 
             if(isAutoMode){
                 
