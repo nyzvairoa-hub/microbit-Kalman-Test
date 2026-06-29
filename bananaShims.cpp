@@ -193,7 +193,7 @@ namespace banana {
             
             static int lastTurnOutput = 0;
 
-            float feedforward_X_velocity = lastTurnOutput * PROCESS_GAIN_K;
+            float feedforward_X_velocity = lastTurnOutput * (-PROCESS_GAIN_K);
 
             // Kalman Predict
             //float dt = 0.01; 
