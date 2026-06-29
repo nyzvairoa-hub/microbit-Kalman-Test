@@ -73,7 +73,7 @@ namespace banana {
     }
 
     //% blockID:banana_SetAutoMode
-    //% block="set tracking mode %enable"
+    //% block="set tracking mode %enable with process_k: %process_k"
     //% enable.shadow=toggleOnOff
     export function setAutoMode(EnableAuto: boolean, process_k: number): void{
         _set_auto_mode(EnableAuto, process_k);
