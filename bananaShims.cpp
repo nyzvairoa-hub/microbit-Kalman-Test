@@ -57,6 +57,7 @@ namespace banana {
     const int MIN_DRIVE_SPEED = 50;
 
     static int lastSensorX = -1;
+    static int lastTurnOutput = 0;
 
     uint64_t lastTime = uBit.systemTime();
     int global_dt_ms = 0; 
@@ -190,8 +191,6 @@ namespace banana {
             float dt = (float)dt_ms / 1000.0f;
             if (dt <= 0.0f) dt = 0.01f;
             if (dt > 0.1f) dt = 0.1f; // Cap dt to prevent massive jumps if processor hangs
-            
-            static int lastTurnOutput = 0;
 
             float feedforward_X_velocity = lastTurnOutput * (-PROCESS_GAIN_K);
 
