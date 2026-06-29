@@ -54,7 +54,7 @@ namespace banana {
     const int DEAD_DIST = 5;
 
     const int MAX_TURN_SPEED = 150;
-    const int MIN_DRIVE_SPEED = 60;
+    const int MIN_DRIVE_SPEED = 55;
 
     static int lastSensorX = -1;
     static int lastTurnOutput = 0;
