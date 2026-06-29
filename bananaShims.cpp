@@ -192,7 +192,7 @@ namespace banana {
             if (dt <= 0.0f) dt = 0.01f;
             if (dt > 0.1f) dt = 0.1f; // Cap dt to prevent massive jumps if processor hangs
 
-            float feedforward_X_velocity = lastTurnOutput * (PROCESS_GAIN_K);
+            float feedforward_X_velocity = lastTurnOutput * (-PROCESS_GAIN_K);
 
             // Kalman Predict
             //float dt = 0.01; 
