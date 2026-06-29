@@ -48,6 +48,7 @@ namespace banana {
     static float KP_DIST = 1.5;
     static float KD_TURN = 0.5; 
     static float KD_DIST = 0.5;
+    static float PROCESS_GAIN_K = 1.5f; 
 
     const int DEAD_TURN = 10;
     const int DEAD_DIST = 5;
@@ -190,9 +191,16 @@ namespace banana {
             if (dt <= 0.0f) dt = 0.01f;
             if (dt > 0.1f) dt = 0.1f; // Cap dt to prevent massive jumps if processor hangs
             
+            static int lastTurnOutput = 0;
+
+            float feedforward_X_velocity = lastTurnOutput * PROCESS_GAIN_K;
+
             // Kalman Predict
             //float dt = 0.01; 
             filterAngle.predict(dt); filterDistance.predict(dt);
+
+            filterAngle.pos += (feedforward_X_velocity * dt);
+
             filterAngle.vel = filterAngle.vel * 0.80; 
             filterDistance.vel = filterDistance.vel * 0.80;
 
@@ -260,6 +268,8 @@ namespace banana {
                     //if(abs(driveOutput) < 20) driveOutput = 0; // Hard stop at low speeds
                 }
 
+                lastTurnOutput = turnOutput;
+
                 // Mixing
                 int leftSpeed = driveOutput + turnOutput;
                 int rightSpeed = driveOutput - turnOutput;
@@ -324,8 +334,9 @@ namespace banana {
     }
 
     //%
-    void set_auto_mode(bool enabled){
+    void set_auto_mode(bool enabled, float process_gain_k){
         isAutoMode = enabled;
+        PROCESS_GAIN_K = process_gain_k;
     }
 
     //%

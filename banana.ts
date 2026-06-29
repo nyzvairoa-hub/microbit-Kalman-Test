@@ -29,7 +29,7 @@ namespace banana {
     function _kd_value(KDTurn: number, KDDist: number): void { return; }
 
     //% shim=banana::set_auto_mode
-    function _set_auto_mode(EnableAuto: boolean): void { return; }
+    function _set_auto_mode(EnableAuto: boolean, process_k: number): void { return; }
 
     //% shim=banana::KalmanFilterValuesAngle
     function _KalmanFilterValuesAngle(r_measure_angle: number, q_measures_angle_pos: number, q_measures_angle_vel: number): void { return; }
@@ -75,8 +75,8 @@ namespace banana {
     //% blockID:banana_SetAutoMode
     //% block="set tracking mode %enable"
     //% enable.shadow=toggleOnOff
-    export function setAutoMode(EnableAuto: boolean): void{
-        _set_auto_mode(EnableAuto);
+    export function setAutoMode(EnableAuto: boolean, process_k: number): void{
+        _set_auto_mode(EnableAuto, process_k);
     }
 
     //% blockID:banana_KalmanFilter
